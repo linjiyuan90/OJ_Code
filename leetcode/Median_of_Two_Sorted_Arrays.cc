@@ -30,7 +30,7 @@ public:
       // maybe drop last sb number in B[0..bi]
       // where sa + sb = s
       if (A[ai-sa+1] > B[bi-sb+1]) {
-	  ai -= sa;
+	ai -= sa;
       } else {
 	bi -= sb;
       }

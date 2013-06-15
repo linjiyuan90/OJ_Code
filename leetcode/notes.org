@@ -1,0 +1,17 @@
+
+* Notes
+** Next Permutation
+   One way to have a larger permutation in a[i-1, n) is to find the
+   minimum a[j] where a[j] > a[i-1], j \in [i, n), then swap(a[i-1],
+   a[j]) and sort a[i, n).
+
+   To guarantee we find the next permutation, we have to scan from
+   right to left, find the first i that has a larger permutation in
+   a[i-1, n). Then swap and sort like above. Since i is the first one has a
+   larger permutation, we know that a[i, n) is nonincreasing, just
+   reverse a[i, n) will sort them.
+
+   O(n)
+** Median of Two Sorted Arrays 
+   sa + sb = s will guarantee correct drop operation. \\
+   But notice when s = 1, need to set sa = sb = 1.
