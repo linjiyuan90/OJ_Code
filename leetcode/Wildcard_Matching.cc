@@ -1,44 +1,89 @@
 #include "iostream"
 #include "vector"
 #include "cstring"
+#include "string"
 
 using namespace std;
 
 class Solution {
 public:
-  // O(n*m) not pass?
+
+  typedef vector<string> VS;
+  
   bool isMatch(const char *s, const char *p) {
-    int n = strlen(p), m = strlen(s);
-    // need to use scroll array
-    vector<vector<bool>> dp(2, vector<bool>(m+1, false));
-    int pre = 0, now = 1;
-    dp[now][0] = true;
-    for (int i = 1; i <= n; i++) {
-      swap(pre, now);
-      bool or_dp = (i == 1); // record or(dp[i-1][0..j])
-      dp[now][0] = (dp[pre][0] && p[i-1] == '*'); // m may be 0
-      for (int j = 1; j <= m; j++) {
-	or_dp |= dp[pre][j];
-	if (p[i-1] == '*') {
-	  if (or_dp) {
-	    fill(dp[now].begin() + j, dp[now].end(), true);
-	    break;
-	  }
-	  dp[now][j] = or_dp;
-	} else {
-	  dp[now][j] = ((p[i-1] == '?' || p[i-1] == s[j-1]) &&
-		      dp[pre][j-1]);
-	}
+    string ps = compress_star(p);
+    p = ps.c_str();
+    int n = strlen(s), m = strlen(p);
+    int si = 0, sj = n - 1;
+    int pi = 0, pj = m - 1;
+    // head
+    for (;si <= sj && pi <= pj && p[pi] != '*'; si++, pi++) {
+      if (s[si] != p[pi] && p[pi] != '?') {
+	return false;
       }
     }
-    return dp[now][m];
+    // tail
+    for (;si <= sj && pi <= pj && p[pj] != '*'; sj--, pj--) {
+      if (s[sj] != p[pj] && p[pj] != '?') {
+	return false;
+      }
+    }
+    if (pi > pj && si <= sj) {
+      return false;
+    }
+    // make p looks like *p1*p2..pk*
+    for (string word : split(string(p+pi, pj-pi+1), "*")) {
+      bool is_match = false;
+      for (int n = word.length(); sj - si + 1 >= n; si++) {
+	if (match(string(s+si, n), word)) {
+	  si += n;
+	  is_match = true;
+	  break;
+	}
+      }
+      if (!is_match) {
+	return false;
+      }
+    }
+    return true;
+  }
+
+  bool match(const string &a, const string &b) {
+    for (size_t ix = 0; ix < a.length(); ix++) {
+      if (a[ix] != b[ix] && b[ix] != '?') {
+	return false;
+      }
+    }
+    return true;
+  }
+  
+  string compress_star(const char *p) {
+    string ps;
+    for (; *p; p++) {
+      if (*p == '*' && !ps.empty() && ps.back() == '*') {
+	continue;
+      }
+      ps += *p;
+    }
+    return ps;
+  }
+  
+  VS split(const std::string &str, const std::string &delimiters) {
+    VS result;
+    for (size_t st = 0, ed = 0; ed != std::string::npos; ) {
+      ed = str.find_first_of(delimiters, st);
+      if (st < str.length() && st != ed) {
+	result.push_back(str.substr(st, ed - st));
+      }
+      st = ed + 1;
+    }
+    return result;
   }
 };
 
 int main() {
   Solution sl;
-  char s[1000], p[1000];
-  // cin >> s >> p;
-  s[0] = p[0] = 0;
+  char s[1000] = "mississippi", p[1000] = "m*iss*";
+  //cin >> s >> p;
   cout << sl.isMatch(s, p);
 }
