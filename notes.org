@@ -17,3 +17,6 @@
     sa + sb = s will guarantee correct drop operation.
 
     But notice when s = 1, need to set sa = sb = 1.
+*** Trapping Rain Water
+    maintain a monotonous stack
+    Each time, calculate the increment.
