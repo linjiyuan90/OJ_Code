@@ -6,7 +6,7 @@ class Solution {
 public:
   int trap(int A[], int n) {
     int ans = 0;
-    // maintain a monotonous decreasing stack
+    // maintain a monotonically decreasing stack
     std::stack<int> desc_walls;
     for (int i = 0; i < n; ++i) {
       while (desc_walls.size() > 1 && A[desc_walls.top()] <= A[i]) {
