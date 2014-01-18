@@ -1,102 +1,132 @@
+#include "iostream"
+#include "unordered_map"
+#include "unordered_set"
+#include "vector"
+#include "string"
+#include "queue"
+
+// 1840 ms
 class Solution {
 public:
-  vector<vector<string>> findLadders(string start,
-				     string end,
-				     unordered_set<string> &dict) {
+  std::vector<std::vector<std::string>> 
+  findLadders(std::string start,
+	      std::string end,
+	      std::unordered_set<std::string> &dict) {
     if (start == end) {
-      return vector<vector<string>> {vector<string>{start, end}};
+      return std::vector<std::vector<std::string>> {
+	std::vector<std::string>{start, end}
+      };
     }
-    // build bidirection graph
-    // label string as 0, 1, ..., n-1
-    // start, end as n, n+1
-    dict_vt.clear();
-    dist.clear();
-    G.clear();
+    
+    // generate candidates
+    dict.insert(end);
+    generate_candidates(dict);
+    
+    // bfs to calculate dist
+    bfs(start, end);
 
-    int n = dict.size();
-    dict_vt.reserve(n+2);
-    copy(dict.begin(), dict.end(), back_inserter(dict_vt));
-    dict_vt.push_back(start);
-    dict_vt.push_back(end);
-    build_graph();
+    if (!dist.count(end)) {
+      return std::vector<std::vector<std::string>>();
+    }
 
-    // bfs to find shortset path
-    dist.resize(n+2, INF);
-    bfs(n+1);
-
-    // dfs to get all the paths
-    vector<vector<string>> res;
-    vector<string> path;
-    dfs(n, n+1, res, path);
+    // dfs to generate combintion
+    std::vector<std::vector<std::string>> res;
+    std::vector<std::string> path;
+    dfs(start, end, res, path);
     return res;
   }
 
 private:
-  // Consider every pair of point and check whether they're neighbor
-  // is slow.
-  // Another approach is to set one of the char as '*'
-  // For example:
-  // 1234 => *234, 1*234, 12*4, 123*
-  void build_graph() {
-    int n = dict_vt.size();
-    G.resize(n);
-    unordered_map<string, vector<int>> umap;
-    for (size_t i = 0; i < n; i++) {
-      string s = dict_vt[i];
-      for (size_t j = 0; j < s.length(); j++) {
-	char ch = s[j];
-	s[j] = '*';
-	umap[s].push_back(i);
-	s[j] = ch;
+  std::string pattern(const std::string &s, const int &ix) {
+    return s.substr(0, ix) + '*' + s.substr(ix+1);
+  }
+
+  void generate_candidates(std::unordered_set<std::string> &dict) {
+    for (auto it = dict.begin(); it != dict.end(); ++it) {
+      auto &s = *it;
+      for (size_t ix = 0; ix < s.length(); ++ix) {
+	candidates[pattern(s, ix)].push_back(s);
       }
     }
-    for (auto it = umap.begin(); it != umap.end(); it++) {
-      vector<int> &vt = it->second;
-      for (size_t i = 0; i < vt.size(); i++) {
-	for (size_t j = i+1; j < vt.size(); j++) {
-	  G[vt[i]].push_back(vt[j]);
-	  G[vt[j]].push_back(vt[i]);
+  }
+
+  void bfs(const std::string &start, const std::string &end) {
+    std::queue<std::pair<std::string, int>> q;
+    q.push(std::make_pair(start, 0));
+    dist[start] = 0;
+    while(!q.empty()) {
+      auto s = q.front().first;
+      auto d = q.front().second;
+      q.pop();
+      if (s == end) {
+	break;
+      }
+      // neighbors
+      // what about store the neighbors for dfs
+      for (size_t ix = 0; ix < s.length(); ++ix) {
+	auto &candidate = candidates[pattern(s, ix)];
+	for (auto it = candidate.begin(); it != candidate.end(); ++it) {
+	  // first visited
+	  if (!dist.count(*it)) {
+	    dist[*it] = d + 1;
+	    q.push(std::make_pair(*it, d + 1));
+	  }
 	}
       }
     }
   }
 
-  void bfs(int t) {
-    dist[t] = 0;
-    queue<int> Q;
-    Q.push(t);
-    while (!Q.empty()) {
-      int u = Q.front();
-      Q.pop();
-      for (size_t ix = 0; ix < G[u].size(); ix++) {
-	int v = G[u][ix];
-	if (dist[v] == INF) {
-	  dist[v] = dist[u] + 1;
-	  Q.push(v);
-	}
-      }
-    }
-  }
-
-  void dfs(int u, int t, vector<vector<string>> &res, vector<string> &path) {
-    path.push_back(dict_vt[u]);
-    if (u == t) {
+  // passing result as argument instead of using return value
+  // improve little or not
+  void dfs(const std::string &now,
+	   const std::string &end,
+	   std::vector<std::vector<std::string>> &res,
+	   std::vector<std::string> &path) {
+    path.push_back(now);
+    if (now == end) {
       res.push_back(path);
     } else {
-      for (size_t ix = 0; ix < G[u].size(); ix++) {
-	int v = G[u][ix];
-	if (dist[v] == dist[u] - 1) {
-	  dfs(v, t, res, path);
+      int d = dist[now];
+      for (size_t ix = 0; ix < now.length(); ++ix) {
+	auto &candidate = candidates[pattern(now, ix)];
+	for (auto it = candidate.begin(); it != candidate.end(); ++it) {
+	  if (dist[*it] == d + 1) {
+	    // can't use reference to bind non-const lvalue
+	    dfs(*it, end, res, path);
+	  }
 	}
       }
     }
     path.pop_back();
   }
 
-  vector<string> dict_vt;
-  vector<vector<int>> G;  // adjoint list
-  vector<int> dist;  // dist from target
-
-  const int INF = 0x3f3f3f3f;
+  // "*234": ["1234", "2234", ..]
+  std::unordered_map<std::string, std::vector<std::string>> candidates;
+  std::unordered_map<std::string, int> dist;
 };
 
+std::string mkString(const std::vector<std::string> &vt,
+		     const std::string beg = "[",
+		     const std::string sep = ",",
+		     const std::string end = "]") {
+  std::string ans = beg;
+  for (auto it = vt.begin(); it != vt.end(); ++it) {
+    if (it != vt.begin()) {
+      ans += sep;
+    }
+    ans += *it;
+  }
+  return ans + end;
+}
+
+int main() {
+  Solution sol;
+  std::unordered_set<std::string> dict {"hot", "dot", "dog", "lot", "log"};
+  auto res = sol.findLadders("hit","cog", dict);
+  std::vector<std::string> res_string;
+  for (auto it = res.begin(); it != res.end(); ++it) {
+    res_string.push_back(mkString(*it));
+  }
+  std::cout << mkString(res_string, "[\n  ", ",\n  ", "\n]\n") << std::endl;
+  return 0;
+}
