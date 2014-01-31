@@ -5,7 +5,7 @@
 #include "string"
 #include "queue"
 
-// 1840 ms
+// 576 ms
 class Solution {
 public:
   typedef std::vector<std::string> VS;

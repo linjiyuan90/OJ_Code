@@ -5,9 +5,10 @@
 
 class Solution {
 public:
+  // TODO
+  // instead of filling the matrix
+  // output to string directly
   std::string convert(std::string s, int nRows) {
-    // when nRows is even
-    // need some more consideration
     std::vector<std::string> cols;
     for (size_t ix = 0; ix < s.length();) {
       // down

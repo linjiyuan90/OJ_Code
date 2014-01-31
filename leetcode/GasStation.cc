@@ -7,7 +7,56 @@
 
 class Solution {
 public:
+  
+  // The most elegant solution
+  // https://github.com/Dionysus1227/edocteel/blob/master/Gas%20Station.cc
+  // gready
+  // The intrinsic meansing is "leave the most expensive traval to the last"
   int canCompleteCircuit(std::vector<int> &gs, std::vector<int> &cost) {
+    int delta = 0;
+    int min_index = -1, min_sum = INT_MAX;
+    for (size_t ix = 0; ix < gs.size(); ++ix) {
+      delta += gs[ix] - cost[ix];
+      if (delta < min_sum) {
+	min_sum = delta;
+	min_index = ix;
+      }
+    }
+    return delta < 0 ? -1 : (min_index + 1) % gs.size();
+  }
+  
+
+  // Enlightened by the above solution
+  // Find the max continous sum (may cross the tail to the head) 
+  // The intrinsic meaning is "gather as much gas as possible at the begining" 
+  int canCompleteCircuit(std::vector<int> &gs, std::vector<int> &cost) {
+    int delta = 0;
+    std::vector<int> dp(gs.size()),dp_ix(gs.size());
+    int max_index = -1, max_sum = -1;
+    for (size_t ix = 0; ix < gs.size(); ++ ix) {
+      int d = gs[ix] - cost[ix];
+      delta += d;
+      if (ix == 0 || dp[ix-1] <= 0) {
+	dp[ix] = d;
+	dp_ix[ix] = ix;
+      } else {
+	dp[ix] = dp[ix-1] + d;
+	dp_ix[ix] = dp_ix[ix-1];
+      }
+      if (dp[ix] > max_sum) {
+	max_sum = dp[ix];
+	max_index = dp_ix[ix];
+      }
+    }
+    // cross the tail and head
+    if (max_index == 0 && dp.back() > 0) {
+      max_index = dp_ix.back();
+    }
+    return delta < 0 ? -1 : max_index;
+  }
+  
+  // maintain montonically increasing queue
+  int canCompleteCircuit2(std::vector<int> &gs, std::vector<int> &cost) {
     // just to make sure
     // sum(gs[s..j]) - sum(cost[s..j]) >= 0 for each j > s if we specify s as start station
     // this is equivalent to
