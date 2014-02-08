@@ -20,3 +20,11 @@
 *** Trapping Rain Water
     maintain a monotonous stack
     Each time, calculate the increment.
+*** random list
+*** gas station
+    greedy approach
+*** Copy list with random pointer
+    the cool idea is to duplicate the node
+    then seperate it
+    1->2->3
+    1->1'->2->2'->3->3'
