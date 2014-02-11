@@ -14,11 +14,11 @@ public:
     if (i > 0) {
       for (j = n - 1; j > i && num[i-1] >= num[j]; j--) {
 	// find num[j]
-	// where num[j] is the minimum number > num[i], j in [i, n)
+	// where num[j] is the minimum number > num[i-1], j in [i, n)
       }
       // swap(num[i-1], num[j])
-      swap(num[i-1], num[j]);
+      std::swap(num[i-1], num[j]);
     }
-    reverse(num.begin()+i, num.end());
+    std::reverse(num.begin()+i, num.end());
   }
 };

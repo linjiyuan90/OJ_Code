@@ -1,9 +1,9 @@
 class Solution {
 public:
-  std::vector<std::vector<int>> levelOrderBottom(TreeNode *root) {
+  
+  std::vector<std::vector<int>> levelOrder(TreeNode *root) {
     std::vector<std::vector<int>> ans;
     dfs(root, 0, ans);
-    std::reverse(ans.begin(), ans.end());
     return ans;
   }
   

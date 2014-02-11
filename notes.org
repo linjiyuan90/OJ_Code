@@ -28,3 +28,11 @@
     then seperate it
     1->2->3
     1->1'->2->2'->3->3'
+*** single number II
+    count every digit, and module it with 3.
+*** Convert Sorted List to Binary Search Tree
+    move the current head while building
+*** recursive level order traversal
+    https://github.com/Dionysus1227/edocteel/blob/master/Binary%20Tree%20Level%20Order%20Traversal.cc
+* sth
+** Using iterator may be more beautiful than index

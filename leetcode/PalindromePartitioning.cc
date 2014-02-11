@@ -38,7 +38,7 @@ private:
   
   bool is_palindrome(const std::string &s) {
     auto r = s;
-    reverse(r.begin(), r.end());
+    std::reverse(r.begin(), r.end());
     return r == s;
   }
 };

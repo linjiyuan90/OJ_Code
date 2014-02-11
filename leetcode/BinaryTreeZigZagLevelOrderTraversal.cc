@@ -1,9 +1,11 @@
 class Solution {
 public:
-  std::vector<std::vector<int>> levelOrderBottom(TreeNode *root) {
+  std::vector<std::vector<int>> zigzagLevelOrder(TreeNode *root) {
     std::vector<std::vector<int>> ans;
     dfs(root, 0, ans);
-    std::reverse(ans.begin(), ans.end());
+    for (int dep = 1; dep < ans.size(); dep += 2) {
+      std::reverse(ans[dep].begin(), ans[dep].end());
+    }
     return ans;
   }
   

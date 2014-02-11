@@ -12,6 +12,7 @@ class LRUCache {
 public:
   LRUCache(int capacity) {
     this->capacity = capacity;
+    // dummy node
     tail = head = new ListNode();
   }
   

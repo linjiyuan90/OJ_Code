@@ -6,22 +6,14 @@ public:
     if (x < 0) {
       return false;
     }
-    if (x < 10) {
-      return true;
-    }
-    // deal with tailing zeros, like 131000
-    if (x % 10 == 0) {
-      return false;
-    }
-    // Is this an extra space ?
-    for (int y = 0; ; y = y*10 + x % 10, x /= 10) {
-      if (x == y || x / 10 == y) {
-	return true;
-      }
-      if (x == 0) {
+    int high = 1;
+    for (; x / high >= 10; high *= 10);
+    for (int low = 1; low < high; low *= 10, high /= 10) {
+      if (x /low % 10 != x / high % 10) {
 	return false;
       }
     }
+    return true;
   }
 };
 
