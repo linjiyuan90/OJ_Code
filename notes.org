@@ -46,6 +46,22 @@
     may equal to tail of the array. *Just remove the tail which equal to head*
     More elegant algorithm is without search_gap first.
     https://github.com/Dionysus1227/edocteel/blob/master/Search%20in%20Rotated%20Sorted%20Array%20II.cc
+*** Divide two integers
+    Like Fast Exponentiation. Recursively solve it.
+    #+BEGIN_SRC C++
+    int dfs(a, b) {
+      if ...
+      // try 2*b
+      ans = dfs(a, b+b)
+      ans += ans  // need to double
+      if (a >= b) {
+        a -= b;
+        ++ ans;
+      }
+      return ans;
+    }
+    #+END_SRC
+    
 * sth
 ** Using iterator may be more beautiful than index
 ** after finishing the code, remember to test with simple case!
