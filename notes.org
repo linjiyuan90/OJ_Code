@@ -34,5 +34,19 @@
     move the current head while building
 *** recursive level order traversal
     https://github.com/Dionysus1227/edocteel/blob/master/Binary%20Tree%20Level%20Order%20Traversal.cc
+*** Recover Binary Search Tree
+    dfs, use =TreeNode *&prev= to record prev pointer
+*** reverse linked list 2
+    change cur->next instead of cur
+    
+*** Largest Rectangle in Histogram
+    : left[i] = left[left[i]];
+*** Search in Rotated Sorted Array 2
+    If duplicates are allowed, the search_gap program may fail due to the head
+    may equal to tail of the array. *Just remove the tail which equal to head*
+    More elegant algorithm is without search_gap first.
+    https://github.com/Dionysus1227/edocteel/blob/master/Search%20in%20Rotated%20Sorted%20Array%20II.cc
 * sth
 ** Using iterator may be more beautiful than index
+** after finishing the code, remember to test with simple case!
+   For tree, test NULL, 1 node, 2 nodes

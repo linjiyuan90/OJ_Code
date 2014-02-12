@@ -2,22 +2,23 @@ class Solution {
 public:
   ListNode *deleteDuplicates(ListNode *head) {
     if (head == NULL) {
-      return NULL;
+      return head;
     }
-    ListNode *a = NULL, *b = NULL, *c = head;
-    ListNode *q = new ListNode(0);
-    head = q;
-    for (; ; a = b, b = c, c = c->next) {
-      if (b != NULL && (c == NULL || b->val != c->val)) {
-	if (a == NULL || a->val != b->val) {
-	  q = q->next = b;
-	}
+    ListNode *dummy = new ListNode(head->val-1);
+    ListNode *pre = dummy, *cur = head;
+    head = dummy;
+    for (; cur != NULL; pre = cur, cur = cur->next) {
+      if (pre->val == cur->val) {
+	continue;
       }
-      if (c == NULL) {
-	break;
+      if (cur->next == NULL || cur->val != cur->next->val) {
+	head->next = cur;
+	head = head->next;
       }
     }
-    q->next = NULL;
-    return head->next;
+    head->next = NULL;
+    head = dummy->next;
+    delete dummy;
+    return head;
   }
 };
