@@ -1,7 +1,3 @@
-#include "iostream"
-#include "algorithm"
-#include "vector"
-
 class Solution {
 public:
   std::vector<std::vector<int>> generateMatrix(int n) {
@@ -23,8 +19,3 @@ public:
     return 0 <= x && x < n && 0 <= y && y < n;
   }
 };
-
-int main() {
-  Solution sol;
-  sol.generateMatrix(2);
-}

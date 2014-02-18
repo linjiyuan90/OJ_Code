@@ -62,6 +62,39 @@
     }
     #+END_SRC
     
+*** Sort colors
+    quickssort partition
+    #+BEGIN_SRC C++
+    int p = 1;
+    for (int i = 0, j = 0, k = n; j < k;) {
+      if (A[j] > p) {
+	std::swap(A[j], A[--k]);
+      } else if (A[j] < p) {
+	std::swap(A[j++], A[i++]);
+      } else {
+	j++;
+      }
+     }
+    }
+    #+END_SRC
+*** Set Matrix Zeros
+    use the first row to record all column zeros
+*** N-Queens 2
+    A little complicated to memo, just dfs
+*** Rotate Image (Cycle swap)
+    #+BEGIN_SRC C++
+    // 0->1->2->3->0
+    std::swap(A[0], A[1]);
+    std::swap(A[0], A[2]);
+    std::swap(A[0], A[3]);
+    #+END_SRC
+*** First missing positive
+    swap to make 1 to A[0], 2 to A[1] ....
+    Then scan from index = 0, if A[i] != i+1, return i+1;
+*** Multiply String
+    Use =std::vector<int>= to store result will be much convenient.
+    =ans[i+j]+=num1[i]*num2[j]=
+
 * sth
 ** Using iterator may be more beautiful than index
 ** after finishing the code, remember to test with simple case!
