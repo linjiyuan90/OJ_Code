@@ -1,3 +1,43 @@
+// recursively solution is more easier to write
+class Solution {
+public:
+  double findMedianSortedArrays(int A[], int m, int B[], int n) {
+    if ((m+n) % 2 == 0) {
+      return (findMedian(A, m, B, n, (m+n)/2) + findMedian(A, m, B, n, (m+n)/2+1)) / 2.0;
+    } else {
+      return findMedian(A, m, B, n, (m+n)/2+1); 
+    }
+  }
+  
+private:
+  int findMedian(int A[], int m, int B[], int n, int c) {
+    if (m == 0) {
+      return B[c-1];
+    }
+    if (n == 0) {
+      return A[c-1];
+    }
+    if (m + n == c) {
+      return std::max(A[m-1], B[n-1]);
+    }
+    if (c == 1) {  // note when c == 1
+      return std::min(A[0], B[0]);
+    }
+    int a = std::min(c/2, m);
+    int b = c - a;
+    if (b > n) {
+      b = n;
+      a = c - b;
+    }
+    if (A[a-1] < B[b-1]) {
+      return findMedian(A+a, m-a, B, n, c-a);
+    } else {
+      return findMedian(A, m, B+b, n-b, c-b);
+    }
+  }
+};
+
+
 class Solution {
 public:
 

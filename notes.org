@@ -38,7 +38,16 @@
     dfs, use =TreeNode *&prev= to record prev pointer
 *** reverse linked list 2
     change cur->next instead of cur
-    
+    #+BEGIN_SRC C++
+    ListNode *prev = dummy;
+    prev->next = head;
+    for (; head->next != NULL; ) {
+      ListNode *node = head->next;
+      head->next = node->next;
+      node->next = prev->next;
+      prev->next = node;
+    }
+    #+END_SRC
 *** Largest Rectangle in Histogram
     : left[i] = left[left[i]];
 *** Search in Rotated Sorted Array 2
