@@ -14,11 +14,3 @@ public:
     }
   }
 };
-
-// 
-// Enlighten by this, parition can be written as:
-for (int i = 0, j = 0; j < n; ++j) {
-  if (A[j] < p) {
-    std::swap(A[i++], A[j]);
-  }
- }

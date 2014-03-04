@@ -1,5 +1,3 @@
-
-
 class Solution {
 public:
   ListNode *detectCycle(ListNode *head) {
@@ -14,8 +12,10 @@ public:
       b = b->next;
       if (b != NULL) {
 	b = b->next;
-	// find a loop and figure out its length
+	// find a loop
 	if (a == b) {
+	  /*
+	  // figure out its length
 	  n = 1;
 	  for (b = b->next; a != b; b = b->next) {
 	    ++n;
@@ -23,6 +23,24 @@ public:
 	  // start from head
 	  // enumerate every node to find the entry of the cycle
 	  for (a = b = head; n--; b = b->next);
+	  while (true) {
+	    if (a == b) {
+	      return a;
+	    }
+	    a = a->next;
+	    b = b->next;
+	  }
+	}
+	*/
+	// instead of figuring the length
+	// just reset one pointer and loop again
+	// the node they meet is the entry, since
+	// x + n*k = 2*x, k >= 1
+	// x = n*k
+	// let x = head + off
+	// Then, after head steps, two pointers will be
+	// in the entry
+	  a = head;
 	  while (true) {
 	    if (a == b) {
 	      return a;
