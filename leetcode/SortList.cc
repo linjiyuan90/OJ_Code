@@ -1,15 +1,50 @@
 #include "iostream"
 
-
 struct ListNode {
   int val;
   ListNode *next;
   ListNode (int x) : val(x), next(NULL) {}
 };
 
-// Any better way?
 class Solution {
 public:
+  // quick sort
+  ListNode *sortList(ListNode *head) {
+    if (head == NULL || head->next == NULL) {
+      return head;
+    }
+    int pivot = head->val;
+    // dummy node
+    ListNode *lt = new ListNode(0), *eq = new ListNode(0), *gt = new ListNode(0);
+    for (ListNode *pt = head; pt != NULL;) {
+      ListNode *t = pt->next;
+      if (pt->val < pivot) { 
+	pt->next = lt->next;
+	lt->next = pt;
+      } else if (pt->val == pivot) {
+	pt->next = eq->next;
+	eq->next = pt;
+      } else {
+	pt->next = gt->next;
+	gt->next = pt;
+      }
+      pt = t;
+    }
+    lt->next = sortList(lt->next);
+    gt->next = sortList(gt->next);
+    // connect three List
+    for (head = lt; head->next != NULL; head = head->next);
+    head->next = eq->next;
+    for (head = eq; head->next != NULL; head = head->next);
+    head->next = gt->next;
+    return lt->next;
+  }
+};
+
+class Solution {
+public:
+  // merge sort
+  // A little ugly :-(
   ListNode *sortList(ListNode *head) {
     if (head == NULL || head->next == NULL) {
       return head;
