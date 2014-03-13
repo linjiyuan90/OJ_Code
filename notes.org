@@ -104,7 +104,29 @@
     Use =std::vector<int>= to store result will be much convenient.
     =ans[i+j]+=num1[i]*num2[j]=
 
+** geeks for geeks
+*** Optimal Strategy for a Game
+    http://www.geeksforgeeks.org/dynamic-programming-set-31-optimal-strategy-for-a-game/
+    two person playing a game, where each person alternatively take the number
+    of from one of the two end. Finally, person with large sum will win.
+    #+BEGIN_SRC
+    // note that, need to add the minimum one!
+    dp(i, j) = max(v(i) + min(dp(i+1, j-1), dp(i+2, j)),
+                   v(j) + min(dp(i+1, j-1), dp(i, j-2))
+    #+END_SRC
 * sth
 ** Using iterator may be more beautiful than index
 ** after finishing the code, remember to test with simple case!
    For tree, test NULL, 1 node, 2 nodes
+** repeated doubling
+   f(0), f(2), f(4), f(8), ...
+* Array
+  - Finds all elements that appear more than n/k times
+    http://www.geeksforgeeks.org/given-an-array-of-of-size-n-finds-all-the-elements-that-appear-more-than-nk-times/
+    The number of elements that satisfy the requirement is <= k-1. Maintain a
+    temp array of size k-1, at each element, push it into the temp array. If it
+    exists, increase the count. If the size of the temp equals k - 1, decrease
+    all the count, and remove thoses with count 0.
+    O(nk)
+* terms
+  - Base Cases (dynamic programming)
