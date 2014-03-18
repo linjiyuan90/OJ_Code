@@ -1,14 +1,3 @@
-#include "iostream"
-#include "vector"
-
-
-struct TreeNode {
-  int val;
-  TreeNode *left;
-  TreeNode *right;
-  TreeNode(int x): val(x), left(NULL), right(NULL) {}
-};
-
 class Solution {
 public:
   // morris preorder
@@ -36,15 +25,3 @@ public:
     return orders;
   }
 };
-
-int main() {
-  TreeNode *root = new TreeNode(1);
-  TreeNode *two = new TreeNode(2);
-  two->left = new TreeNode(3);
-  root->right = two;
-  Solution sol;
-  for (auto e : sol.preorderTraversal(root)) {
-    std::cout << e << " ";
-  }
-  return 0;
-}

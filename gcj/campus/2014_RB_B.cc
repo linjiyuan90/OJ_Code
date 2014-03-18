@@ -35,7 +35,7 @@ long long sum_dist(const std::vector<Area> &areas,
   return sum;
 }
 
-int binary_search(const std::vector<Area> &areas,
+int ternary_search(const std::vector<Area> &areas,
 		  int lo, int hi, bool x_or_y) {
   while(lo < hi) {
     int len = (hi - lo + 1)/3;
@@ -75,8 +75,8 @@ std::vector<long long> find_optimal(const std::vector<Area> &areas) {
   for (auto &area: areas) {
     // int xx = brute_force_search(areas, area.x1, area.x2, true);
     // int yy = brute_force_search(areas, area.y1, area.y2, false);
-    int xx = binary_search(areas, area.x1, area.x2, true);
-    int yy = binary_search(areas, area.y1, area.y2, false);
+    int xx = ternary_search(areas, area.x1, area.x2, true);
+    int yy = ternary_search(areas, area.y1, area.y2, false);
     long long sum = sum_dist(areas, xx, true) + sum_dist(areas, yy, false);
     if (sum < min || sum == min && (x > xx || x == xx && y > yy)) {
       min = sum;
