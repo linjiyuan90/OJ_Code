@@ -1,92 +1,83 @@
-#include "iostream"
-#include "unordered_map"
-#include "list"
-
 // The O(1) solution should be:
 // ArrayList + HashMap
 
 // Java has LinkedHashMap can be used to implement the LRU Cache
 // http://dncroot.com/2007/09/18/lru-caches/
 
+
 class LRUCache {
 public:
   LRUCache(int capacity) {
     this->capacity = capacity;
-    // dummy node
-    tail = head = new ListNode();
+    tail = head = new Node(0, 0);
   }
   
   int get(int key) {
-    auto it = kv.find(key);
-    if (it == kv.end()) {
-      return -1;
-    } else {
-      update(key);
-      return it->second->val;
+    if (hash.count(key)) {
+      Node *node =  hash[key];
+      update(node);
+      return node->val;
     }
+    return -1;
   }
 
   void set(int key, int value) {
-    if (this->capacity == 0) {
+    if (capacity == 0) {
       return;
     }
-    // insert
-    if (kv.count(key) == 0) {
-      tail->next = new ListNode(key, value, tail, NULL);
-      tail = tail->next;
-      kv[key] = tail;
-      if (kv.size() > this->capacity) {
-	ListNode *first = head->next;
-	first->next->prev = head;
-	head->next = first->next;
-	kv.erase(first->key);
-	delete first;
-      }
+    if (hash.count(key)) {
+      Node *node = hash[key];
+      node->val = value;
+      update(node);
     } else {
-      // update
-      kv[key]->val = value;
-      update(key);
+      hash[key] = tail->next = new Node(key, value, tail, NULL);
+      tail = tail->next;
+      // remove the oldest
+      if (hash.size() > capacity) {
+	Node *t = head->next;
+	hash.erase(t->key);
+	t->next->prev = head;
+	head->next = t->next;
+	delete t;
+      }
     }
   }
 
-private:
-  struct ListNode {
+  ~LRUCache() {
+    delete head;
+    for (auto &e : hash) {
+      delete e.second;
+    }
+  }
+
+private:  
+  struct Node {
     int key, val;
-    ListNode *next, *prev;
-    // delegation
-    ListNode(): ListNode(0, 0, NULL, NULL) {}
-    ListNode(int key, int val, ListNode *prev, ListNode *next):
-      key(key), val(val), prev(prev), next(next) {}
+    Node *prev, *next;
+
+    Node(int key, int val) {
+      Node(key, val, NULL, NULL);
+    }
+    Node(int key, int val, Node* prev, Node *next): 
+      key(key), val(val), prev(prev), next(next) {
+    }
   };
 
-  ListNode *head, *tail;
-  std::unordered_map<int, ListNode*> kv;
+  // capacity
   int capacity;
+  // lookup Node with key
+  std::unordered_map<int, Node*> hash;
+  // dummy node
+  Node *head, *tail;
 
-  // assume key exists in kv
-  void update(int key) {
-    ListNode *pl = kv[key];
-    if (pl != tail) {
-      pl->prev->next = pl->next;
-      pl->next->prev = pl->prev;
-      tail->next = pl;
-      pl->prev = tail;
-      pl->next = NULL;
-      tail = pl;
+  void update(Node *node) {
+    if (node != tail) {
+      node->prev->next = node->next;
+      node->next->prev = node->prev;
+      node->next = NULL;
+      tail->next = node;
+      node->prev = tail;
+      tail = node;
     }
   }
 };
-
-int main() {
-  LRUCache cache(3);
-  std::cout << cache.get(1) << std::endl;
-  cache.set(1, 1);
-  cache.set(2, 2);
-  cache.set(3, 3);
-  cache.set(4, 4);
-  std::cout << cache.get(4) << std::endl;
-  std::cout << cache.get(3) << std::endl;
-  std::cout << cache.get(2) << std::endl;
-  std::cout << cache.get(1) << std::endl;
-  return 0;
-}
