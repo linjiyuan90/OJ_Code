@@ -9,7 +9,6 @@ public:
     return lhs.first < rhs.first;
   }
 };
-
 template<typename T>
 class Stack:
   // inherits empty(), pop() and size() methods, nice!

@@ -4,6 +4,58 @@
 // Java has LinkedHashMap can be used to implement the LRU Cache
 // http://dncroot.com/2007/09/18/lru-caches/
 
+class LRUCache {
+public:
+  LRUCache(int capacity) {
+    this->capacity = capacity;
+  }
+  
+  int get(int key) {
+    if (hash.count(key)) {
+      move_to_front(key);
+      return hash[key]->second;
+    }
+    return -1;
+  }
+
+  void set(int key, int  value) {
+    if (capacity == 0) {
+      return;
+    }
+    if (hash.count(key)) {
+      hash[key]->second = value;
+      move_to_front(key);
+    } else {
+      data.emplace_front(key, value);
+      hash[key] = data.begin();
+      if (data.size() > capacity) {
+	hash.erase(data.back().first);
+	data.pop_back();
+      }
+    }
+  }
+
+  void erase(int key) {
+    if(hash.count(key)) {
+      data.erase(hash[key]);
+      hash.erase(key);
+    }
+  }
+
+private:
+  int capacity;
+  // [(key, value)]
+  typedef std::list<std::pair<int, int>> Cache;
+  Cache data;
+  std::unordered_map<int, Cache::iterator> hash;
+
+  void move_to_front(int key) {    
+    data.emplace_front(key, hash[key]->second);
+    data.erase(hash[key]);
+    hash[key] = data.begin();
+  }
+};
+
 
 class LRUCache {
 public:
@@ -81,3 +133,4 @@ private:
     }
   }
 };
+
