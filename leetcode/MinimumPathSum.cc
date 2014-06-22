@@ -9,7 +9,7 @@ public:
     for (int i = 0; i < n; ++i) {
       dp[now][0] = dp[prev][0] + grid[i][0];
       for (int j = 1; j < m; ++j) {
-	dp[now][j] = std::min(dp[prev][j], dp[now][j-1]) + grid[i][j];
+        dp[now][j] = std::min(dp[prev][j], dp[now][j-1]) + grid[i][j];
       }
       std::swap(now, prev);
     }
