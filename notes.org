@@ -104,6 +104,8 @@
     Use =std::vector<int>= to store result will be much convenient.
     =ans[i+j]+=num1[i]*num2[j]=
 
+*** Wildcard Matching
+    https://github.com/Dionysus1227/edocteel/blob/master/Wildcard%20Matching.cc
 ** geeks for geeks
 *** Optimal Strategy for a Game
     http://www.geeksforgeeks.org/dynamic-programming-set-31-optimal-strategy-for-a-game/
@@ -128,5 +130,6 @@
     exists, increase the count. If the size of the temp equals k - 1, decrease
     all the count, and remove thoses with count 0.
     O(nk)
+    Or use a map, O(nlogk) ~ O(n)
 * terms
   - Base Cases (dynamic programming)
