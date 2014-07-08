@@ -103,7 +103,7 @@
 *** Multiply String
     Use =std::vector<int>= to store result will be much convenient.
     =ans[i+j]+=num1[i]*num2[j]=
-
+    
 *** Wildcard Matching
     https://github.com/Dionysus1227/edocteel/blob/master/Wildcard%20Matching.cc
 ** geeks for geeks
@@ -116,6 +116,8 @@
     dp(i, j) = max(v(i) + min(dp(i+1, j-1), dp(i+2, j)),
                    v(j) + min(dp(i+1, j-1), dp(i, j-2))
     #+END_SRC
+** codility
+*** NumberOfDiscIntersections, model as **events**, count current number of open event
 * sth
 ** Using iterator may be more beautiful than index
 ** after finishing the code, remember to test with simple case!
@@ -133,3 +135,7 @@
     Or use a map, O(nlogk) ~ O(n)
 * terms
   - Base Cases (dynamic programming)
+* TODO
+** counting triangles in undirected graph
+* Tricks
+** when writing binary search, make sure low & high change every time. Avoid dead loop.
