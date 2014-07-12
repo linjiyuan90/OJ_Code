@@ -118,6 +118,7 @@
     #+END_SRC
 ** codility
 *** NumberOfDiscIntersections, model as **events**, count current number of open event
+*** TripPlanning, dfs, and add one to the longest leaf
 * sth
 ** Using iterator may be more beautiful than index
 ** after finishing the code, remember to test with simple case!
@@ -139,3 +140,11 @@
 ** counting triangles in undirected graph
 * Tricks
 ** when writing binary search, make sure low & high change every time. Avoid dead loop.
+* connection
+** longest subarray with sum <= k & MaxDistanceMonotonic
+*** smaller and lefter values are prefered; larger and righter values are prefered
+*** maintain a decreasing array/stack
+** find first value larger/small than i in its left side
+```
+for (pre[i] = i - 1; i >= 0 && A[pre[i]] <= A[i]; ) pre[i] = pre[pre[i]];
+```
