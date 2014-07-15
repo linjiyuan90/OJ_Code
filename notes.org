@@ -118,7 +118,9 @@
     #+END_SRC
 ** codility
 *** NumberOfDiscIntersections, model as **events**, count current number of open event
-*** TripPlanning, dfs, and add one to the longest leaf
+*** TripPlanning, dfs, and add one to the longest leaf, interesting!
+*** PrefixMaxProduct , O(n) to count the occurrences of all prefix
+*** FindThree, kmp, common prefix
 * sth
 ** Using iterator may be more beautiful than index
 ** after finishing the code, remember to test with simple case!

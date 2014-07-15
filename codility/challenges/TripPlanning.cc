@@ -6,6 +6,7 @@
   DON'T simulate the process, using dfs to find longest path from the root of
   each subtree.  Then add one to the longest path, since the longest
   path will be first visited, which has root as an unvisited node.
+  (The latent process is root -> a1, a1 -> root, root-> a2, ...)
   
   dfs(u)
     for v in u's children
