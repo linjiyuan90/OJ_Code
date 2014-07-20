@@ -142,6 +142,7 @@
 ** counting triangles in undirected graph
 * Tricks
 ** when writing binary search, make sure low & high change every time. Avoid dead loop.
+** when using template, note whether to disambiguate InputIter and OutputIter
 * connection
 ** longest subarray with sum <= k & MaxDistanceMonotonic
 *** smaller and lefter values are prefered; larger and righter values are prefered
