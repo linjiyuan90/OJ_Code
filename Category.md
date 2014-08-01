@@ -1,7 +1,9 @@
 # Sequence
 ## Max sum
 * variants: allow one swap; cycle
-## next permutation
+## Next Permutation
+## Maximum Number of Concurrent events
+* maintain current open event, EPI13.10
 
 # String
 ## Lexicographically Minimum String Rotation
@@ -57,3 +59,14 @@ for (int i = n - 1; i >= 0; --i) {
 # Tree
 ## longest path
 * variants
+
+
+# DP
+# knapback
+* 0-1
+* items with specific number
+** no value, just availability, codility MinAbsSum, nice transformation, O(SUM*N)
+```
+
+```
+** with value, it seems requires O(SUM*N*C)

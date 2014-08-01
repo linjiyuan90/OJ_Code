@@ -7,32 +7,48 @@
   More beautiful approach is to treat first, second as two events(open, close)!!!
   For each point, if it's first of some segment, ans += current open events!!!
   if it's second of some segment, -- current open events
+
+  Same as EPI ch13.10 Find Max Concurrent Events
 */
 
 #include "algorithm"
 
-int solution(const std::vector<int>& A) {
-  int n = A.size();
-  std::vector<std::pair<long long, bool>> events;
-  for (int i = 0; i < n; ++i) {
-    events.push_back({0ll + i - A[i], false});  // open first
-    events.push_back({0ll + i + A[i], true});
+template<typename T>
+class Point {
+public:
+  Point(const T& time, const bool& isEnd): time(time), isEnd(isEnd) {
   }
-  std::sort(events.begin(), events.end());
-  int res = 0;
-  int num_open_events = 0;
-  for (auto& event : events) {
-    if (!event.second) {
-      res += num_open_events;
-      if (res > 10000000) {
-	return -1;
-      }
-      ++ num_open_events;
+    
+  bool operator < (const Point& that) const {
+    return time < that.time || (time == that.time && !isEnd);
+  }
+    
+  T time;
+  bool isEnd;
+};
+
+int solution(const vector<int> &A) {
+  std::vector<Point<long long>> points;
+  for (int i = 0, n = A.size(); i < n; ++i) {
+    long long a = static_cast<long long>(A[i]);
+    points.push_back({i - a, false});
+    points.push_back({i + a, true});
+  }
+  std::sort(points.begin(), points.end());
+  int pair_count = 0, count = 0;
+  for (auto& p : points) {
+    if (p.isEnd) {
+      --count;
     } else {
-      -- num_open_events;
+      pair_count += count;
+      if (pair_count > 10000000) {
+	pair_count = -1;
+	break;
+      }
+      ++count;
     }
   }
-  return res;
+  return pair_count;
 }
 
 typedef std::pair<long long, long long> Disc;
