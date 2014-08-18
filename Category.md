@@ -98,7 +98,7 @@ for ({a, count} : items) {
   if (count > 0) {
     for (int j = 0; j <= S; ++j) {
 	  if (dp[j] >= 0) dp[j] = count;
-	  else if (j >= a && dp[j-a] > 0) dp[j] = dp[j-a] + 1;
+	  else if (j >= a && dp[j-a] > 0) dp[j] = dp[j-a] - 1;
     }
   }
 }
@@ -108,3 +108,10 @@ for ({a, count} : items) {
 # Bitwise
 * find the only element which occures once while others occure three times,
   leetcode SingleNumber2
+
+# other
+## parenthese
+* valid parentheses, 2 situations
+  (….)(...), (….)
+* count parentheses, enumerate the which ‘)’ to match the first ‘(‘
+  ()…, (())…, (…)...

@@ -135,7 +135,6 @@
     exists, increase the count. If the size of the temp equals k - 1, decrease
     all the count, and remove thoses with count 0.
     O(nk)
-<<<<<<< Updated upstream
     Or use a map, O(nlogk) ~ O(n)
 =======
 * Search
@@ -149,6 +148,8 @@
 * Tricks
 ** when writing binary search, make sure low & high change every time. Avoid dead loop.
 ** when using template, note whether to disambiguate InputIter and OutputIter
+** code 'if (m < k || A[m-1] != A[i] || A[m-2] != A[i] || ... || A[m-k] != A[i])'
+** if it's hard to know where to start, try the minimum/maximum one first!
 * connection
 ** longest subarray with sum <= k & MaxDistanceMonotonic
 *** smaller and lefter values are prefered; larger and righter values are prefered
