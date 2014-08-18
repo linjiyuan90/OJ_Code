@@ -1,12 +1,12 @@
-#include "map"
+#include "unordered_map"
 #include "set"
 #include "iostream"
 #include "vector"
 #include "string"
 
 class Graph {
-  std::map<std::string, std::map<std::string, int>> edges;
-  std::set<std::tuple<std::string, std::string, bool>> visit;
+  std::unordered_map<std::string, std::unordered_map<std::string, int>> edges;
+  std::unordered_set<std::tuple<std::string, std::string, bool>> visit;
 
 public:
   void addEdge(const std::string& a, const std::string& b, int w) {
