@@ -135,7 +135,13 @@
     exists, increase the count. If the size of the temp equals k - 1, decrease
     all the count, and remove thoses with count 0.
     O(nk)
+<<<<<<< Updated upstream
     Or use a map, O(nlogk) ~ O(n)
+=======
+* Search
+** binary search, when to set high = n -1, and when to set high = n?
+** when doing binary search, low must be mid + 1, high = mid? Otherwise, there maybe a dead loop
+>>>>>>> Stashed changes
 =======
 * Search
 ** binary search, when to set high = n -1, and when to set high = n?
