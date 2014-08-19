@@ -58,11 +58,11 @@ int main() {
     for (int maskInt = 0, all = (1<<7)-1; maskInt <= all; ++maskInt) {
       Segment mask(maskInt);
       // check they're not lit!
-      if (std::find_if(segments.begin(),
-                       segments.end(), 
-                       [&mask](const Segment& seg) {
-                         return (seg&mask).any();
-                       }) != segments.end()) {
+      if (std::all_of(segments.begin(),
+                      segments.end(), 
+                      [&mask](const Segment& seg) {
+                        return (seg&mask).none();
+                      })) {
         continue;
       }
       auto nexts = nextState(segments, mask);

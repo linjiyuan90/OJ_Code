@@ -1,3 +1,10 @@
+/*
+  Calculate minimum number of size M*M papers that can cut 2^s1, 2^s2, ..., 2^sk squares.
+  Since it's length is power of 2, it's easy to maintain these squares in M.
+  Once one square 2^sk is cut in M, collect the left pieces.
+  Cut larger sqaures first.
+*/
+
 #include "iostream"
 #include "vector"
 
