@@ -29,7 +29,7 @@ std::vector<Segment> Segments = {
 };
 
 // there may be serveral next states!
-std::vector<int> nextState(const std::vector<Segment>& segments, const Segment& mask) {
+std::vector<int> next_states(const std::vector<Segment>& segments, const Segment& mask) {
   std::vector<int> nexts;
   int n = segments.size();
   for (int s = 0, i, j; s < 10; ++s) {
@@ -58,14 +58,14 @@ int main() {
     for (int maskInt = 0, all = (1<<7)-1; maskInt <= all; ++maskInt) {
       Segment mask(maskInt);
       // check they're not lit!
-      if (std::all_of(segments.begin(),
+      if (std::any_of(segments.begin(),
                       segments.end(), 
                       [&mask](const Segment& seg) {
-                        return (seg&mask).none();
+                        return (seg&mask).any();
                       })) {
         continue;
       }
-      auto nexts = nextState(segments, mask);
+      auto nexts = next_states(segments, mask);
       for (auto& next : nexts) {
         auto ansSeg = Segments[next] & ~mask;
         ways.insert(ansSeg.to_string());

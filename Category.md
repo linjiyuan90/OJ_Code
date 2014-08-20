@@ -113,7 +113,7 @@ for ({a, count} : items) {
 # Bitwise
 * find the only element which occures once while others occure three times,
   leetcode SingleNumber2
-
+* lowbit `x & -x`, submask `(x-1) & ALL`
 # other
 ## parenthese
 * valid parentheses, 2 situations
