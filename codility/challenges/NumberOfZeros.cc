@@ -2,6 +2,7 @@
   Compute total number of zros in decimal representation of 1, ..., N
   
   Any generalizataion framework?
+  
 */
 
 #include "iostream"

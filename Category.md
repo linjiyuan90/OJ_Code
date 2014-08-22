@@ -5,6 +5,17 @@
 ## Maximum Number of Concurrent events
 * maintain current open event, EPI13.10
 
+## auxiliary prefix_min, monotonic stack/deque
+* max{j-i} where A[i] < A[j]
+** a characteristic is that: **keep smaller and earlier A[i], larger and later A[j]**
+** `O(nlogn)` solution is to maintain `prefix_min` then do a binary search
+** `O(n)` solution is to maintain a `decreasing deque` to store A[i] (from left
+    to right), a `decreasing stack` to store A[j] (from right to left).
+* max{j-i} where A[j] - A[i] < k
+* max{j-i}, where max{A[i..j]} - min{A[i..j]} < k
+** maintain two `deque`, one **desc**, one **asc**; pop front until the fronts
+    of two deques < k. Note, when poping, need to update second front's prefix index.
+
 # String
 ## palindrome
 * Manachor O(n)
@@ -90,6 +101,12 @@ for (int i = n - 1; i >= 0; --i) {
 
 
 # DP
+## bit/digit count problem
+* gcj2014_R1B_B
+* codility **NumberOfZeros**
+```
+count(i, less)
+```
 # knapback
 * 0-1
 * items with specific number
@@ -114,6 +131,13 @@ for ({a, count} : items) {
 * find the only element which occures once while others occure three times,
   leetcode SingleNumber2
 * lowbit `x & -x`, submask `(x-1) & ALL`
+* use `&&` as `if`, `(clausea) && (clauseb)`
+# Recursion
+## basic
+* multiply, divide, pow
+## some nice problems
+* gcj2014_R1B_B
+* gcj_campus2014_RA_B
 # other
 ## parenthese
 * valid parentheses, 2 situations
