@@ -94,6 +94,13 @@ for (int i = n - 1; i >= 0; --i) {
   **started from s**. See
   https://code.google.com/codejam/contest/3214486/dashboard#s=p2 to impress the understanding.
 * `mark[(u, v)]` the edge has been vistied (start from what?)
+### no reursive traversal with stack
+* binary tree preorder just pop and push children
+* binary tree inorder pop, and before push children, check whether last pointer
+  is its left child. if not, push right, root and left.
+* binary tree postorder how? need some flags. With respect to the first visit,
+  no need to pop, just push.
+* what about graph preorder traversal?
 
 # Tree
 ## longest path
