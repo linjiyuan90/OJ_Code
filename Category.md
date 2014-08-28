@@ -135,8 +135,13 @@ for ({a, count} : items) {
 ** with value, it seems requires O(SUM*N*C)
 
 # Bitwise
+## number appearance
 * find the only element which occures once while others occure three times,
-  leetcode SingleNumber2
+  leetcode SingleNumber2. think it as ternary, use two variable to record each
+  bit's count (1 or 2)
+* http://zhedahht.blog.163.com/blog/static/2541117420071128950682/
+* http://zhedahht.blog.163.com/blog/static/25411174201283084246412/
+## some
 * lowbit `x & -x`, submask `(x-1) & ALL`
 * use `&&` as `if`, `(clausea) && (clauseb)`
 # Recursion
@@ -145,9 +150,33 @@ for ({a, count} : items) {
 ## some nice problems
 * gcj2014_R1B_B
 * gcj_campus2014_RA_B
+# probability & expectation
+* the expectation of seeing an event of probability p is
+```
+x = p + (1-p)(1+x)
+x = 1/p
+```
+* sequence, consider suffix, e.g., "expection steps to get two heads during
+  trials"
+[tutorial-expection](http://www.codechef.com/wiki/tutorial-expectation)
+```
+1) first flip is a tail, then we waste one flip, p is 0.5
+2) first two flips are head, tail, then we waste twon flips, p is 0.25
+2) first two flips are heads, then we're done, p is 0.25
+x = 0.5 * (1 + x) + 0.25 * (x + 2) + 0.25 * 2
+```
+** this looks like a state machine, store the temporary possible paths, `11..1?`
+* find the formula of `expectation` seems a shortcut! Otherwise, need to find a
+  series formula!
 # other
 ## parenthese
 * valid parentheses, 2 situations
   (….)(...), (….)
 * count parentheses, enumerate the which ‘)’ to match the first ‘(‘
   ()…, (())…, (…)...
+## union of rectangle
+* a common strategy is to scan x from left to right, insert segments of this x.
+  Segment has two possible state, open/closed. Then consider the strip between
+  adjacent x. `Segment Tree` can be used to store the segments. +1 when
+  encounter an open segment, and -1 when encouner a closed segment.
+      
