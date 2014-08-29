@@ -168,6 +168,19 @@ x = 0.5 * (1 + x) + 0.25 * (x + 2) + 0.25 * 2
 ** this looks like a state machine, store the temporary possible paths, `11..1?`
 * find the formula of `expectation` seems a shortcut! Otherwise, need to find a
   series formula!
+* `linearity of expectation` seems so important, but I still don't understand.
+  It doesn't require variable to be independent.
+** CF280C
+** 
+# Segment Tree
+* TODO. with respect to float number, map to int, and the segment becomes [l, m], [m, r]
+# cycle
+* arrange `a1 a2.. an b1 b2.. bn` to `a1 b1 a2 b2 ...`; note the cycle
+```
+x = x*2 - 1, if x <= n;
+x = (x-n)*2, if x > n.
+but need something to mark visited position. store at the high bit?
+```
 # other
 ## parenthese
 * valid parentheses, 2 situations
@@ -179,4 +192,3 @@ x = 0.5 * (1 + x) + 0.25 * (x + 2) + 0.25 * 2
   Segment has two possible state, open/closed. Then consider the strip between
   adjacent x. `Segment Tree` can be used to store the segments. +1 when
   encounter an open segment, and -1 when encouner a closed segment.
-      
