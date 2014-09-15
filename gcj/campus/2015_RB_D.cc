@@ -69,7 +69,7 @@ std::string construct(int n, long long k) {
     if (left > 0) {
       // two choice, '(', or ')'
       // choose '(' if k < all possible combinations in [i+1, 2n)
-      
+    
       // now have left nunmber of '(', (i-left)/2 pairs in the front
       // so there are p = n-(i-left)/2-1 pairs can be arranged.
       // the ways are: sum(f[p][m]*C(m+left+1, m))
