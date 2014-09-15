@@ -2,6 +2,7 @@
   Compute total number of zros in decimal representation of 1, ..., N
   
   Any generalizataion framework?
+  https://code.google.com/codejam/contest/2994486/dashboard#s=a&a=1
   
 */
 
@@ -41,4 +42,53 @@ int solution(const string &S) {
     ans %= Mod;
   }
   return ans;
+}
+
+namespace DigitCount {
+  static std::unordered_map<int, std::pair<int, int>> cache[2];
+  
+  std::pair<int, int> countZero(int i, const std::string& S, bool lessA) {
+    if (i == S.size()) {
+      return {0, lessA};
+    }
+    if (cache[lessA].count(i)) {
+      return cache[lessA][i];
+    }
+    auto& ans = cache[lessA][i];
+    for (int x = 0; x <= S[i] - '0'; ++x) {
+      auto res = countZero(i+1, S, lessA || x < S[i] - '0'); 
+      int cnt = res.first;
+      if (x == 0) {
+        cnt += res.second;
+      }
+      ans.first = (ans.first + cnt) % Mod;
+      ans.second = (ans.second + res.second) % Mod;
+    }
+    return ans;
+  }
+
+  std::string incOne(std::string S) {
+    std::reverse(S.begin(), S.end());
+    int c, i;
+    for (c = 1, i = 0; c > 0 && i < S.size(); ++i) {
+      c += S[i] - '0';
+      S[i] = c % 10 + '0';
+      c %= 10;
+    }
+    if (c > 0) {
+      S.push_back('1');
+    }
+    std::reverse(S.begin(), S.end());
+    return S;
+  }
+  
+  int countZero(const std::string& S) {
+    cache[0].clear();
+    cache[1].clear();
+    return countZero(0, incOne(S), false).first;
+  }
+}
+
+int solution(const std::string& S) {
+  return DigitCount::countZero(S);
 }

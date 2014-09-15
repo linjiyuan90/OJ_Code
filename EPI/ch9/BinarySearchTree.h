@@ -8,6 +8,7 @@ class BinarySearchTree : public BinaryTree<T> {
  public:
   using BinarySearchTreePtr = std::shared_ptr<BinarySearchTree>;
   
+  //  BinaryTreePtr or BinarySearchTreePtr?
  BinarySearchTree(T data,
                   BinarySearchTreePtr left = nullptr,
                   BinarySearchTreePtr right = nullptr):

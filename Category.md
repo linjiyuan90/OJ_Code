@@ -4,7 +4,6 @@
 ## Next Permutation
 ## Maximum Number of Concurrent events
 * maintain current open event, EPI13.10
-
 ## auxiliary prefix_min, monotonic stack/deque
 * max{j-i} where A[i] < A[j]
 ** a characteristic is that: **keep smaller and earlier A[i], larger and later A[j]**
@@ -73,6 +72,19 @@ Container lexicographcally_minimum_seq(const Container& seq) {
 ## KMP
 * common senses:
   S[i-next[i]..i] = S[0..next[i]]
+** a variant is to find the longest suffix of A that's prefix of B. Use the
+  next, just change to compare with B.
+```c++
+// need to judge whether A is preffix of B first
+// since next[n-1] + 1 < n
+next[0] = -1;
+for (int i = 1; i < n; ++i) {
+  for (next[i] = next[i-1] + 1; next[i] != -1 && A[i] != B[next[i]]; ) {
+    next[i] = next[i] == 0 ? -1 : next[next[i]-1] + 1;
+  }
+}
+return next[n-1]+1;
+```
 * several i may have same next[i], next[] form a tree (so i and i' can have a
   common ancestor)
 * repeat string
@@ -107,6 +119,11 @@ for (int i = n - 1; i >= 0; --i) {
 * variants
 
 
+## record children's state to their ancestors, EPI 9.4
+## travesal
+* record prev traversed node
+## binary search tree
+* iterator, next()
 # DP
 ## bit/digit count problem
 * gcj2014_R1B_B
@@ -114,7 +131,11 @@ for (int i = n - 1; i >= 0; --i) {
 ```
 count(i, less)
 ```
-# knapback
+### two ways
+* general framework
+* iterative, specific to problem
+
+## knapback
 * 0-1
 * items with specific number
 ** no value, just availability, codility MinAbsSum, nice transformation, O(SUM*N)
@@ -171,7 +192,8 @@ x = 0.5 * (1 + x) + 0.25 * (x + 2) + 0.25 * 2
 * `linearity of expectation` seems so important, but I still don't understand.
   It doesn't require variable to be independent.
 ** CF280C
-** 
+* expected number of trials to see 6 dices value, EPI 20.12
+* probablity to form a triangle
 # Segment Tree
 * TODO. with respect to float number, map to int, and the segment becomes [l, m], [m, r]
 # cycle

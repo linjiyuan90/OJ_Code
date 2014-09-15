@@ -7,6 +7,7 @@
 #include "type_traits"
 
 #include "BinaryTree.h"
+#include "BinaryTreeWithParent.h"
 
 void test_binarytree() {
   /*
@@ -54,6 +55,76 @@ void test_binarytree() {
   assert(is_symmetric<int>(root) == true);
 }
 
+void test_binarytreeWithParent() {
+  /*
+         3
+       2   4
+     1   5   7
+           6 
+         8
+  */
+  BinaryTreeWithParentPtr<int> root(new BinaryTreeWithParent<int>(3));
+  root->left = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(2, nullptr, nullptr, root));
+  root->right = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(4, nullptr, nullptr, root));
+  root->left->left = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(1, nullptr, nullptr, root->left));
+  root->right->left = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(5, nullptr, nullptr, root->right));
+  root->right->left->right = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(6, nullptr, nullptr, root->right->left));
+  root->right->right = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(7, nullptr, nullptr, root->right));
+  root->right->left->right->left = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(8, nullptr, nullptr, root->right->left->right));
+  
+  assert((inorder_traversal<int>(root)) == (iterative_inorder_traversal<int>(root)));
+
+  root =  BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(1));
+  root->left =  BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(2, nullptr, nullptr, root));
+  assert((inorder_traversal<int>(root)) == (iterative_inorder_traversal<int>(root)));
+
+  /*
+      1
+    2   4
+      3   5
+    6
+     7
+   */
+  root =  BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(1));
+  root->left = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(2, nullptr, nullptr, root));
+  root->right = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(4, nullptr, nullptr, root));
+  root->left->right = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(3, nullptr, nullptr, root->left));
+  root->right->right = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(5, nullptr, nullptr, root->right));
+  root->left->right->left = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(6, nullptr, nullptr, root->left->right));
+  root->left->right->left->right = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(6, nullptr, nullptr, root->left->right->left));
+  assert((inorder_traversal<int>(root)) == (iterative_inorder_traversal<int>(root)));
+
+  /*
+        1
+      2
+    3
+   4
+  */
+  root =  BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(1));
+  root->left = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(2, nullptr, nullptr, root));
+  root->left->left = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(3, nullptr, nullptr, root->left));
+  root->left->left->left = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(4, nullptr, nullptr, root->left->left));
+  assert((inorder_traversal<int>(root)) == (iterative_inorder_traversal<int>(root)));
+
+  /*
+       1
+    2    4
+       3   5
+        6 7
+     
+   */
+  root =  BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(1));
+  root->left = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(2, nullptr, nullptr, root));
+  root->right = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(4, nullptr, nullptr, root));
+  root->right->left = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(3, nullptr, nullptr, root->right));
+  root->right->right = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(5, nullptr, nullptr, root->right));
+  root->right->left->right = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(6, nullptr, nullptr, root->right->left));
+  root->right->right->left = BinaryTreeWithParentPtr<int>(new BinaryTreeWithParent<int>(7, nullptr, nullptr, root->right->right));
+  assert((inorder_traversal<int>(root)) == (iterative_inorder_traversal<int>(root)));
+
+}
+
 int main() {
   test_binarytree();
+  test_binarytreeWithParent();
 }

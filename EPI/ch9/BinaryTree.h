@@ -15,7 +15,6 @@ class BinaryTree {
   BinaryTree(T data,
              BinaryTreePtr left = nullptr,
              BinaryTreePtr right = nullptr);
-  
 };
 
 template<typename T>
@@ -144,13 +143,8 @@ bool is_symmetric(const BinaryTreePtr<T>& root) {
   return (!root || is_symmetric<T>(root->left, root->right));
 }
 
-template<typename T>
-BinaryTreePtr<T> kth_node(BinaryTreePtr<T> root) {
-  
-}
+#endif // BINARY_TREE_H__
 
 // full binary tree
 // complete binary tree
 // perfect binary tree
-
-#endif // BINARY_TREE_H__

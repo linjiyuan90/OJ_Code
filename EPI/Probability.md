@@ -56,3 +56,8 @@ int uniform_random_a_b(const int &a, const int &b) {
   return a + res;
 }
 ```
+
+## 20.12 Expectation number to get all six numbers in rolling dix game
+* the expected number of seeing the k-th new value, **given that** k-1 values
+  have already been seen, is `6/(6-k+1)`
+* hence the expected time to see the sixth new value is: sum{6/(6-k+1)}, k = 1,..,6
