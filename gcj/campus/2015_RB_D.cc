@@ -8,81 +8,100 @@
 using namespace std;
 
 namespace Parentheses {
-const int Max = 10;
-std::vector<unsigned long long> f(Max + 1);
+
+const int Max = 100;
+const long long MaxF = 1000000000000000001LL;
+
+// f[n, k] n pairs with k parts:
+// ((..))|((..))|...
+std::vector<std::vector<long long>> f(Max + 1, std::vector<long long>(Max + 1));
+std::vector<long long> sumF(Max + 1);
 
 void init() {
-  f[0] = 1;
+  f[0][0] = 1;
+  sumF[0] = 1;
   for (int n = 1; n <= Max; ++n) {
-    for (int i = 0; i < n; ++i) {
-      f[n] += f[i] * f[n-1-i];
-      double ff = f[i];
-      ff *= f[n-1-i];
-      assert(f[i] * f[n-1-i] >= ff);
+    for (int k = 1; k <= n; ++k) {
+      for (int l = 0; l < n; ++l) {
+        if (1.0 * sumF[l] * f[n-l-1][k-1] >= MaxF) {
+          f[n][k] = MaxF;
+          break;
+        }
+        f[n][k] += sumF[l] * f[n-l-1][k-1];
+      }
+      sumF[n] += f[n][k];
+      sumF[n] = std::min(sumF[n], MaxF);
     }
   }
+}
+
+long long gcd(long long a, long long b) {
+  return b == 0 ? a : gcd(b, a % b);
+}
+
+long long comb(int n, int k) {
+  k = std::min(k, n - k);
+  // check if larger than MaxF
+  double d = 1.0;
+  for (int i = 0; i < k; ++i) {
+    d *= (n-i);
+    d /= (i+1);
+  }
+  if (d >= MaxF) {
+    return MaxF;
+  }
+  // 
+  long long a = 1, b = 1;
+  for (int i = 0; i < k; ++i) {
+    a *= (n-k+1+i);
+    b *= (k-i);
+    long long g = gcd(a, b);
+    a /= g;
+    b /= g;
+  }
+  return a / b;
 }
 
 // k start from zero
-std::string construct(int n, unsigned long long k) {
-  // std::cout << n << " " << f[n] << " " << k << std::endl;
-  assert(f[n] > k);
-  if (k == 0) {
-    return std::string(n, '(') + std::string(n, ')');
-  }
-  unsigned long long sum = 0;
-  // enumerate the first ()
-  int i;
-  for (i = n; i > 0; --i) {
-    if (sum + f[n-i+1] > k) {
-      break;
-    }
-    sum += f[n-i+1];
-  }
-  // enumerate how much inside
-  // (inside) outside
-  int in;
-  // unsigned long long sum = 0;
-  for (in = n-i; in >= 0; --in) {
-    if (sum + f[n-i-in] > k) {
-      break;
-    }
-    sum += f[n-i-in];
-  }
-  k -= sum;
-  unsigned long long m = k / f[n-i-in];
-  std::string res = std::string(i, '(') + ")";
-  res += construct(in, m) + std::string(i-1, ')');
-  res += construct(n-i-in, k % f[n-i-in]);
-  return res;
-}
-
-std::vector<std::string> construct(int n) {
-  if (n == 0) {
-    return {""};
-  }
-  if (n == 1) {
-    return {"()"};
-  }
-  std::vector<std::string> res;
-  for (int left = 0; left < n; ++left) {
-    for (const auto& l : construct(left)) {
-      for (const auto& r : construct(n - 1 - left)) {
-        res.push_back("(" + l + ")" + r);
+std::string construct(int n, long long k) {
+  std::string res;
+  for (int i = 0, left = 0; i < 2*n; ++i) {
+    if (left > 0) {
+      // two choice, '(', or ')'
+      // choose '(' if k < all possible combinations in [i+1, 2n)
+      
+      // now have left nunmber of '(', (i-left)/2 pairs in the front
+      // so there are p = n-(i-left)/2-1 pairs can be arranged.
+      // the ways are: sum(f[p][m]*C(m+left+1, m))
+      long long ways = 0;
+      int p = n - (i-left)/2 - (left+1);
+      for (int m = 0; m <= p; ++m) {
+        long long c = comb(m+left+1, m);
+        if (MaxF / c <= f[p][m]) {
+          ways = MaxF;
+          break;
+        }
+        ways += f[p][m] * c;
+        if (ways >= MaxF) {
+          break;
+        }
       }
+      if (ways > k) {
+        ++ left;
+        res.push_back('(');
+      } else {
+        -- left;
+        k -= ways;
+        res.push_back(')');
+      }
+    } else {
+      ++left;
+      res.push_back('(');
     }
   }
   return res;
 }
-
-std::string constructByBruteForce(int n, unsigned long long k) {
-  auto res = construct(n);
-  std::sort(res.begin(), res.end());
-  return res[k];
 }
-
-}
-
 
 int main() {
   Parentheses::init();
@@ -91,11 +110,10 @@ int main() {
   for (std::cin >> T; T--; ++t) {
     std::cout << "Case #" << t << ": ";
     std::cin >> n >> k;
-    if (k > Parentheses::f[n]) {
+    if (k > Parentheses::sumF[n]) {
       std::cout << "Doesn't Exist!" << std::endl;
     } else {
-      std::cout << Parentheses::constructByBruteForce(n, k-1) << std::endl;
-      // std::cout << Parentheses::construct(n, k-1) << std::endl;
+      std::cout << Parentheses::construct(n, k-1) << std::endl;
     }
   }
   return 0;
