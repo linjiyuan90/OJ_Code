@@ -156,6 +156,7 @@
 ** when using template, note whether to disambiguate InputIter and OutputIter
 ** code 'if (m < k || A[m-1] != A[i] || A[m-2] != A[i] || ... || A[m-k] != A[i])'
 ** if it's hard to know where to start, try the minimum/maximum one first!
+** solve offline
 * connection
 ** longest subarray with sum <= k & MaxDistanceMonotonic
 *** smaller and lefter values are prefered; larger and righter values are prefered
