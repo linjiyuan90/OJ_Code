@@ -100,6 +100,9 @@ for (int i = n - 1; i >= 0; --i) {
 ### Extend KMP
 
 
+## characteristic
+* if a[0..m) == a[n-m..n), m > n/2,
+  then a[0..k) == a[k..2k) == ..., k = n-m and k | n
 # Graph
 ## traversal
 * normally, `mark[v]` means (start from s), v has been visited; note it's
@@ -124,6 +127,9 @@ for (int i = n - 1; i >= 0; --i) {
 * record prev traversed node
 ## binary search tree
 * iterator, next()
+## tree dp
+* way of cut tree into k parts, define state that u is separate from its parent
+  or not. `connect[u][k], cut[u][k]`. https://www.hackerrank.com/challenges/cuttree
 # DP
 ## bit/digit count problem
 * gcj2014_R1B_B
@@ -155,6 +161,10 @@ for ({a, count} : items) {
 ```
 ** with value, it seems requires O(SUM*N*C)
 
+## k large
+* hackerrank "Extremum Permutations", record how larage current P[i] is, or say,
+  how many numbers that are less than P[i] in the left numbers after making
+  [1..i] legal. `dp[i][lt]`
 # Bitwise
 ## number appearance
 * find the only element which occures once while others occure three times,
@@ -194,6 +204,11 @@ x = 0.5 * (1 + x) + 0.25 * (x + 2) + 0.25 * 2
 ** CF280C
 * expected number of trials to see 6 dices value, EPI 20.12
 * probablity to form a triangle
+# Combination
+* form n balls from k groups, `C(n+k-1, n)`. That's, `n1+n2+..+nk=n`, there are
+  n+k-1 positions (each ni and '+')
+* insert k new balls to existing n-k balls to form a seq, `C(n, k)`. That's
+  choosing k position from final n positions for k new balls.
 # Segment Tree
 * TODO. with respect to float number, map to int, and the segment becomes [l, m], [m, r]
 # cycle
