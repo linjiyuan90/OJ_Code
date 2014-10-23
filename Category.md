@@ -15,6 +15,9 @@
 ** maintain two `deque`, one **desc**, one **asc**; pop front until the fronts
     of two deques < k. Note, when poping, need to update second front's prefix index.
 
+## swap permutation
+* how many sequence can get after swap k adjacent/arbitratry pairs. hackerrank
+  `swap permutation`
 # String
 ## palindrome
 * Manachor O(n)
@@ -129,7 +132,10 @@ for (int i = n - 1; i >= 0; --i) {
 * iterator, next()
 ## tree dp
 * way of cut tree into k parts, define state that u is separate from its parent
-  or not. `connect[u][k], cut[u][k]`. https://www.hackerrank.com/challenges/cuttree
+  or not. `connect[u][k],
+  cut[u][k]`. https://www.hackerrank.com/challenges/cuttree
+## cut the tree into forest
+* hackerank Kundu and Tree. Cut the tree into serveral components, then counting.
 # DP
 ## bit/digit count problem
 * gcj2014_R1B_B
