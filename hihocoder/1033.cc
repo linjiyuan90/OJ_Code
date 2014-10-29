@@ -2,13 +2,18 @@
  Define f(x) = a0 - a1 + a2 - a3 ..., where x = a0a1a2..., its digit representation.
  Given 0<= l, r <= 10^18, |k| <= 100, calculate the sum of x, where f(x) = k
  
- Define, num[len][k], sum[len][k] be the num/sum of that f(x) = k where x has exactly len digits (may have preceeding zero!!!)
- num[len][k] = ∑∑num[l][sign(len-l)*(d-k)], 1 <= l < len, d = 0..9
- sum[len][k] = ∑∑d*num[l][sign(len-l)*(d-k)] + sum[l][sign(len-l)*(d-k)], 1 <= l < len, d = 0..9
+ Define, num[len][k], sum[len][k] be the num/sum that f(x) = k where x has exactly len digits (may have preceeding zero!!!)
+ num[len][k] = ∑num[l][d-k],  d = 0..9
+ sum[len][k] = ∑d*10^(len-1)*num[l][d-k] + sum[l][d-k], d = 0..9
  sign(v) = v % 2 == 1 ? 1 : -1
  
  Define g(v) be the sum of x where f(x) = k and 0 <= x < v
- 
+ To calculate g(v), just scan from left to right. At each iteration, accumulate f(v) with a fixed prefix and flexible digits.
+ For example: v = 211
+ iter1: accmulate all x with form 0??, 00?, 1?? and f(x) = k
+ iter2: accmulate all x with form 20?, and f(x) = k
+ iter3: accmulate all x with form 210, and f(x) = k
+
  The answer will be g(r+1) - g(l)
  */
 #include "iostream"
