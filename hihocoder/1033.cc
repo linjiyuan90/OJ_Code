@@ -1,5 +1,5 @@
 /*
- Define f(x) = a0 - a1 + a2 - a3 ..., where x = a0a2a2..., its digit representation.
+ Define f(x) = a0 - a1 + a2 - a3 ..., where x = a0a1a2..., its digit representation.
  Given 0<= l, r <= 10^18, |k| <= 100, calculate the sum of x, where f(x) = k
  
  Define, num[len][k], sum[len][k] be the num/sum of that f(x) = k where x has exactly len digits (may have preceeding zero!!!)
