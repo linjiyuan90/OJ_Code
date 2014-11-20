@@ -5,7 +5,7 @@
   1. First getNext() (next is also called borders)
   2. mark next[n-1], next[next[n-1]], ..., they are prefix candidates
   3. try every j, if j has common prefix with n-1, that's: next[next..[j]] = next[next..[n-1]]
-     then for each prefix candidates c, check whether c <= next[j] && c < j - c && j < n-1 - c
+  then for each prefix candidates c, check whether c <= next[j] && c < j - c && j < n-1 - c
 
   Conclusion: next[] forms an tree, several i may have same parent
 */
@@ -39,12 +39,12 @@ int solution(string& S) {
   int l = 0;
   for (int j = 0; j < n; ++j) {
     // mark means j and n-1 has common prefix candidates
-    // Or say, some next[next...[j]] = next[next..[n-1]]
+    // Or say, some S[next...[j]] = S[next..[n-1]]
     if (next[j] >= 0 && mark[next[j]]) {
       while (!candidates.empty()) {
 	int c = candidates.back();
 	// note c <= next[j]
-	if (c <= next[j] && c < j - c && j < n-1 - c) {
+	if (c <= next[j] && c < j - c && j < n-1 - c) {  // is this judge perfect?
 	  l = std::max(l, c + 1);
 	  candidates.pop_back();
 	} else {
