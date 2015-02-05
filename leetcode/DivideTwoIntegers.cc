@@ -1,31 +1,44 @@
 class Solution {
-public:
-  int divide(int dividend, int divisor) {
-    // let k = dividend / divisor
-    // Consider k's binary expression
-    // Can't use shift, so solve it recursively.
-    // note negative, INT_MAX
-    int sign = (dividend > 0) ^ (divisor > 0) ? -1 : 1;
-    long long l_dividend = abs((long long)dividend);
-    long long l_divisor = abs((long long)divisor);
-    return divide(l_dividend, l_divisor) * sign;
-  }
-
-private:
-  // substract it
-  long long divide(long long &dividend, long long divisor) {
-    if (divisor > dividend) {
+  // only use substract
+  // while and substract is slow
+  // need a log algorithm
+  // note sign!
+    
+  int divideImpl(long long& dividend, long long divisor) {
+    if (dividend < divisor) {
       return 0;
     }
-    // try 2*divisor
-    long long ans = divide(dividend, divisor + divisor);
-    // need to double
-    // maybe pass in paramter will be more clear
-    ans += ans;
+    int res = divideImpl(dividend, divisor + divisor);
+    res += res;
     if (dividend >= divisor) {
-      ++ ans;
       dividend -= divisor;
+      ++ res;
     }
-    return ans;
+    return res;
+  }
+  
+  int divideImplIterative(long long dividend, long long divisor) {
+    std::vector<long long> divisor2s(1, divisor);
+    while (divisor2s.back() < dividend) {
+      divisor2s.push_back(divisor2s.back() + divisor2s.back());
+    }
+    int res = 0;
+    for (auto it = divisor2s.rbegin(); it != divisor2s.rend(); ++it) {
+      res += res;
+      if (dividend >= *it) {
+        dividend -= *it;
+        ++ res;
+      }
+    }
+    return res;
+  }
+  
+public:
+  int divide(int dividend, int divisor) {
+    int sign = ::signbit(dividend) ^ ::signbit(divisor);
+    sign = sign == 1 ? -1 : 1;
+    long long dividendLong = ::llabs(dividend);
+    long long divisorLong = ::llabs(divisor);
+    return sign * divideImplIterative(dividendLong, divisorLong);
   }
 };

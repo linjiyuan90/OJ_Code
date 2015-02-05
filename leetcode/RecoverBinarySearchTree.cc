@@ -1,30 +1,40 @@
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
 class Solution {
-public:
-  void recoverTree(TreeNode *root) {
-    std::vector<TreeNode *> err;
-    TreeNode *prev = NULL;
-    dfs(root, prev, err);
-    // just swap head and tail nodes will work
-    if (err.size() >= 2) {
-      std::swap(err.front()->val, err.back()->val);
-    }
-  }
-
-private:
-  // Inorder traversal
-  // record the strange nodes
-  void dfs(TreeNode *root, TreeNode *&prev, std::vector<TreeNode *> &err) {
+    
+  void recoverTreeImpl(TreeNode* root, TreeNode*& pre, vector<TreeNode*>& err) {
     if (root == NULL) {
       return;
     }
-    dfs(root->left, prev, err);
-    if (prev != NULL && prev->val > root->val) {
-      if (err.empty() || prev != err.back()) {
-	err.push_back(prev);
+    recoverTreeImpl(root->left, pre, err);
+    // whenever there is a descend pair, record them.
+    if (pre != NULL && pre->val > root->val) {
+      if (err.empty() || pre != err.back()) {
+        err.push_back(pre);
       }
       err.push_back(root);
     }
-    prev = root;
-    dfs(root->right, prev, err);
+    pre = root;
+    recoverTreeImpl(root->right, pre, err);
+  }
+    
+public:
+  void recoverTree(TreeNode *root) {
+    vector<TreeNode*> err;
+    TreeNode* pre = NULL;
+    recoverTreeImpl(root, pre, err);
+    if (err.size() >= 2) {
+      swap(err.front()->val, err.back()->val);
+    }
   }
 };
+
+
+//   1 2 7 4 5 6 3

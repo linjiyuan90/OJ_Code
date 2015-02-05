@@ -1,19 +1,19 @@
 class Solution {
 public:
-  std::vector<std::string> anagrams(std::vector<std::string> &strs) {
-    std::unordered_map<std::string, int> hash_map;
-    for (auto e : strs) {
-      std::sort(e.begin(), e.end());
-      ++hash_map[e];
+  vector<string> anagrams(vector<string> &strs) {
+    std::unordered_map<std::string, int> cnt;
+    for (auto str : strs) {
+      std::sort(str.begin(), str.end());
+      ++ cnt[str];
     }
-    std::vector<std::string> ans;
+    std::vector<std::string> res;
     for (auto &e : strs) {
-      std::string s = e;
+      auto s = e;
       std::sort(s.begin(), s.end());
-      if (hash_map[s] > 1) {
-	ans.push_back(e);
+      if (cnt[s] > 1) {
+	res.push_back(e);
       }
     }
-    return ans;
+    return res;
   }
 };

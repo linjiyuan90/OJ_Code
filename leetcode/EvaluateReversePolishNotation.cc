@@ -1,36 +1,30 @@
-#include "iostream"
-#include "string"
-#include "vector"
-#include "stack"
-
 class Solution {
+    
+  const std::string Operators = "+-*/";
+    
 public:
-  int evalRPN(std::vector<std::string> &tokens) {
-    auto getAB = [](std::stack<int> &eles) {
-      int b = eles.top();
-      eles.pop();
-      int a = eles.top();
-      eles.pop();
-      return std::pair<int, int> (a, b);
-    };
-    std::stack<int> eles;
-    for (auto &e : tokens) {
-      if (e == "+") {
-	auto ab = getAB(eles);
-	eles.push(ab.first + ab.second);
-      } else if (e == "-") {
-	auto ab = getAB(eles);
-	eles.push(ab.first - ab.second);
-      }	else if (e == "*") {
-	auto ab = getAB(eles);
-	eles.push(ab.first * ab.second);
-      } else if (e == "/") {
-	auto ab = getAB(eles);
-	eles.push(ab.first / ab.second);
+  int evalRPN(vector<string> &tokens) {
+    std::stack<int> operands;
+    for (auto& s : tokens) {
+      if (s.size() == 1 && Operators.find(s[0]) != std::string::npos) {
+	int b = operands.top();
+	operands.pop();
+	int a = operands.top();
+	operands.pop();
+	if (s == "+") {
+	  operands.push(a + b);
+	} else if (s == "-") {
+	  operands.push(a - b);
+	} else if (s == "*") {
+	  operands.push(a * b);
+	} else if (s == "/") {
+	  operands.push(a / b);
+	} 
       } else {
-	eles.push(::atoi(e.c_str()));
+	// let the exception throw
+	operands.push(std::stoi(s));    
       }
     }
-    return eles.top();
+    return operands.top();
   }
 };

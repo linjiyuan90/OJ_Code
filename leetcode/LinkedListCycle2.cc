@@ -1,56 +1,46 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
 class Solution {
 public:
   ListNode *detectCycle(ListNode *head) {
-    // two pointers 
-    // once know there is a cycle
-    // loop again to get cycle length n
-    // then enumerate each node
-    int n = 0;
-    ListNode *a = head, *b = head;
-    while (a != NULL && b != NULL) {
-      a = a->next;
-      b = b->next;
-      if (b != NULL) {
-	b = b->next;
-	// find a loop
-	if (a == b) {
-	  /*
-	  // figure out its length
-	  n = 1;
-	  for (b = b->next; a != b; b = b->next) {
-	    ++n;
-	  }
-	  // start from head
-	  // enumerate every node to find the entry of the cycle
-	  for (a = b = head; n--; b = b->next);
-	  while (true) {
-	    if (a == b) {
-	      return a;
-	    }
-	    a = a->next;
-	    b = b->next;
-	  }
-	}
-	*/
-	// instead of figuring the length
-	// just reset one pointer and loop again
-	// the node they meet is the entry, since
-	// x + n*k = 2*x, k >= 1
-	// x = n*k
-	// let x = head + off
-	// Then, after head steps, two pointers will be
-	// in the entry
-	  a = head;
-	  while (true) {
-	    if (a == b) {
-	      return a;
-	    }
-	    a = a->next;
-	    b = b->next;
-	  }
-	}
+    // check whether there is a cycle
+    ListNode* p = head;
+    ListNode* q = head;
+    for (; p != NULL && q != NULL;) {
+      p = p->next;
+      q = q->next;
+      if (q != NULL) {
+	q = q->next;
+      }
+      if (p == q) {
+	break;
       }
     }
-    return NULL;
+    if (p == NULL || q == NULL) {
+      return NULL;
+    }
+    // loop again to find the length of the cycle
+    int n = 0;
+    for (; n == 0 || p != q; ++n) {
+      p = p->next;
+      q = q->next->next;
+    }
+    q = p = head;
+    // advance q n steps
+    for (int i = 0; i < n; ++i) {
+      q = q->next;
+    }
+    // now loop, if q and p hit, that must be the entry
+    while (p != q) {
+      p = p->next;
+      q = q->next;
+    }
+    return p;
   }
 };

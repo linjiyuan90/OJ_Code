@@ -1,56 +1,45 @@
-#include "iostream"
-#include "string"
-#include "vector"
-
 class Solution {
-public:
-  std::vector<std::vector<std::string>> partition(std::string s) {
-    // recursive solution 
-    // enumerate the palindrome head of s, combine the head with the 
-    // tail partition
-    // "abaab"
-    // {"a", partition("baab")}
-    // {"aba", partition("ab")}
-    
-    std::vector<std::vector<std::string>> res;
-    std::vector<std::string> path;
-    partition(s, res, path);
-    return res;
-  }
-  
-private:
-  void partition(std::string s,
-		 std::vector<std::vector<std::string>> &res,
-		 std::vector<std::string> &path) {
-    if (s.empty()) {
-      res.push_back(path);
+  void traceback(
+		 int now,
+		 const std::string& s,
+		 const std::vector<std::list<int>>& pre,
+		 std::vector<std::vector<std::string>>& ans,
+		 std::vector<std::string>& path) {
+    if (now == -1) {
+      ans.push_back(path);
+      std::reverse(ans.back().begin(), ans.back().end());
       return;
     }
-    for (size_t len = 1; len <= s.length(); ++ len) {
-      auto prefix = s.substr(0, len);
-      if (is_palindrome(prefix)) {
-	path.push_back(prefix);
-	partition(s.substr(len), res, path);
-	path.erase(--path.end());
+    for (auto& p : pre[now]) {
+      path.push_back(s.substr(p, now-p+1));
+      traceback(p-1, s, pre, ans, path);
+      path.pop_back();
+    }
+  }
+    
+public:
+  vector<vector<string>> partition(string s) {
+    using std::vector;
+    using std::list; 
+    using std::string;
+        
+    // enumerate the center of palindrome
+    int n = s.length();
+    vector<list<int>> pre(n);
+    for (int i = 0; i < n; ++i) {
+      // i as center
+      for (int j = 0; i-j >= 0 && i+j < n && s[i-j] == s[i+j]; ++j) {
+	pre[i+j].push_back(i-j);
+      }
+      // middle of (i, i+1) as center
+      for (int j = 0; i-j >= 0 && i+1+j < n && s[i-j] == s[i+1+j]; ++j) {
+	pre[i+1+j].push_back(i-j);
       }
     }
-  }
-  
-  bool is_palindrome(const std::string &s) {
-    auto r = s;
-    std::reverse(r.begin(), r.end());
-    return r == s;
+    vector<vector<string>> ans;
+    vector<string> path;
+    // dfs to trace back all the combination
+    traceback(s.length()-1, s, pre, ans, path);
+    return ans;
   }
 };
-
-int main() {
-  Solution sol;
-  auto ans = sol.partition("aab");
-  for (auto it = ans.begin(); it != ans.end(); ++ it) {
-    for (auto jt = it->begin(); jt != it->end(); ++ jt) {
-      std::cout << *jt << " ";
-    }
-    std::cout << std::endl;
-  }
-  return 0;
-}

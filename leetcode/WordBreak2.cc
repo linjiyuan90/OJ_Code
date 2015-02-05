@@ -1,40 +1,57 @@
+/*
+  Need to do a dp first.
+  Just dfs will TLE, since when searching, push & pop too much.
+*/
+
 class Solution {
-public:
-  std::vector<std::string> wordBreak(std::string s, 
-				     std::unordered_set<std::string> &dict) {
-    std::vector<std::vector<int>> dp(s.length() + 1, std::vector<int>());
-    dp[0].push_back(0);
-    for (size_t ix = 0; ix < s.length(); ++ix) {
-      for (auto w : dict) {
-	if (ix + 1 >= w.length()) {
-	  size_t beg = ix + 1 - w.length();
-	  if (!dp[beg].empty() && s.substr(beg, w.length()) == w) {
-	    dp[ix+1].push_back(w.length());
-	  }
+  std::vector<std::vector<int>> findBreaks(
+					   const std::string& s,
+					   std::unordered_set<std::string>& dict) {
+    int n = s.length();
+    std::vector<std::vector<int>> breaks(n);
+    for (int i = 0; i < n; ++i) {
+      for (int j = i; j >= 0; --j) {
+	if ((j == 0 || !breaks[j-1].empty())
+	    && dict.count(s.substr(j, i - j + 1))) {
+	  breaks[i].push_back(j);
 	}
       }
     }
-    std::vector<std::string> ans;
-    backtrack(s.length(), s, dp, ans, "");
-    return ans;
+    return breaks;
   }
-
-private:
-  void backtrack(size_t now,
-		 const std::string &s,
-		 const std::vector<std::vector<int>> &dp,
-		 std::vector<std::string> &ans,
-		 std::string tail) {
-    if (now == 0) {
-      ans.push_back(tail);
+    
+  void gather(const std::string&s,
+	      int now,
+	      std::vector<int>& path,
+	      std::vector<std::vector<int>>& breaks,
+	      std::vector<std::string>& ans) {
+    if (now == -1) {
+      std::string words;
+      int ix = 0;
+      for (auto it = path.rbegin()+1; it != path.rend(); ++it) {
+	if (ix > 0) {
+	  words += " ";
+	}
+	words += s.substr(ix, *it - ix);
+	ix = *it;
+      }
+      ans.push_back(words);
       return;
     }
-    for (auto l : dp[now]) {
-      if (now == s.length()) {
-	backtrack(now - l, s, dp, ans, s.substr(now - l, l));
-      } else {
-	backtrack(now - l, s, dp, ans, s.substr(now - l, l) + " " + tail);
-      }
+    for (auto& b : breaks[now]) {
+      path.push_back(b);
+      gather(s, b-1, path, breaks, ans);
+      path.pop_back();
     }
+  }
+    
+public:
+  vector<string> wordBreak(string s, unordered_set<string> &dict) {
+    auto breaks = findBreaks(s, dict);
+    std::vector<std::string> ans;
+    std::vector<int> path;
+    path.push_back(s.length());
+    gather(s, s.length() - 1, path, breaks, ans);
+    return ans;
   }
 };

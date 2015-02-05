@@ -1,18 +1,23 @@
 class Solution {
 public:
-  int minPathSum(std::vector<std::vector<int>> &grid) {
-    // dp[i][j] = min(dp[i-1][j], dp[i][j-1]) + grid[i][j];
-    int n = grid.size(), m = grid[0].size();
-    std::vector<std::vector<int>> dp(2, std::vector<int>(m, INT_MAX));
-    int now = 0, prev = 1;
-    dp[prev][0] = 0;
-    for (int i = 0; i < n; ++i) {
-      dp[now][0] = dp[prev][0] + grid[i][0];
-      for (int j = 1; j < m; ++j) {
-        dp[now][j] = std::min(dp[prev][j], dp[now][j-1]) + grid[i][j];
-      }
-      std::swap(now, prev);
+  int minPathSum(vector<vector<int>>& grid) {
+    if (grid.empty()) {
+      return 0;
     }
-    return dp[prev][m-1];
+    // sum[i][j] = min(sum[i-1][j], sum[i][j-1]) + grid[i][j]
+    // use rolling arry to optimize space
+    int n = grid.size(), m = grid.front().size();
+    std::vector<std::vector<int>> sum(2, std::vector<int>(m));
+    int pre = 0, now = 1;
+    // note this initilization
+    std::partial_sum(grid.front().begin(), grid.front().end(), sum[pre].begin());
+    for (int i = 1; i < n; ++i) {
+      sum[now][0] = sum[pre][0] + grid[i][0];
+      for (int j = 1; j < m; ++j) {
+        sum[now][j] = std::min(sum[pre][j], sum[now][j-1]) + grid[i][j];
+      }
+      std::swap(now, pre);
+    }
+    return sum[pre][m-1];
   }
 };

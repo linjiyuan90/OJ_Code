@@ -1,34 +1,37 @@
 class Solution {
+  int di[4]{0, 1, 0, -1};
+  int dj[4]{1, 0, -1, 0};
+    
 public:
-  std::vector<int> spiralOrder(std::vector<std::vector<int>> &matrix) {
-    std::vector<int> ans;
-    if (!matrix.empty()) {
-      int n = matrix.size(), m = matrix[0].size();
-      int dx[] = {0, 1, 0, -1};
-      int dy[] = {1, 0, -1, 0};
-      int lx = 0, rx = n - 1, ly = 0, ry = m-1;
-      for (int x = 0, y = 0, k = 0, c = 0; c < n*m ; ++c) {
-	ans.push_back(matrix[x][y]);
-	int xx = x + dx[k];
-	int yy = y + dy[k];
-	if (xx < lx || xx > rx || yy < ly || yy > ry) {
-	  if (k == 0) {
-	    ++lx;
-	  } else if (k == 1) {
-	    --ry;
-	  } else if (k == 2) {
-	    --rx;
-	  } else if (k == 3) {
-	    ++ly;
-	  }
-	  k = (k + 1) % 4;
-	  xx = x + dx[k];
-	  yy = y + dy[k];
-	}
-	x = xx;
-	y = yy;
-      }
+  vector<int> spiralOrder(vector<vector<int> > &matrix) {
+    std::vector<int> res;
+    if (matrix.empty()) {
+      return res;
     }
-    return ans;
+    int n = matrix.size(), m = matrix.front().size();
+    int min_i = 0, max_i = n - 1;
+    int min_j = 0, max_j = m - 1;
+    for (int i = 0, j = 0, d = 0, c = 0; c < n * m; ++c) {
+      res.push_back(matrix[i][j]);
+      if (i + di[d] < min_i) {
+	d = (d + 1) % 4;
+	++ min_j;
+      }
+      if (i + di[d] > max_i) {
+	d = (d + 1) % 4;
+	-- max_j;
+      }
+      if (j + dj[d] < min_j) {
+	d = (d + 1) % 4;
+	-- max_i;
+      }
+      if (j + dj[d] > max_j) {
+	d = (d + 1) % 4;
+	++ min_i;
+      }
+      i += di[d];
+      j += dj[d];
+    }
+    return res;
   }
 };

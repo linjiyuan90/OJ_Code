@@ -1,55 +1,38 @@
-// naive solution
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
 class Solution {
-public:
-  TreeNode *sortedListToBST(ListNode *head) {
-    if (head == NULL) {
-      return NULL;
-    }
-    int n = 0;
-    for (ListNode *q = head; q != NULL; q = q->next) {
-      ++n;
-    }
-    if (n == 1) {
-      return new TreeNode(head->val);
-    }
-    ListNode *q = head;
-    for (int c = 0; c < n/2 - 1; ++c) {
-      q = q->next;
-    }
-    ListNode *list_root = q->next;
-    q->next = NULL;
-    TreeNode *root = new TreeNode(list_root->val);
-    root->left = sortedListToBST(head);
-    root->right = sortedListToBST(list_root->next);
-    // recover
-    q->next = list_root;
-    return root;
-  }
-};
-
-
-// O(n)!!
-class Solution {
-public:
-  TreeNode *sortedListToBST(ListNode *head) {
-    int n = 0;
-    for (ListNode *q = head; q != NULL; q = q->next) {
-      ++ n;
-    }
-    return build_BST(head, n);
-  }
-  
-private:
-  // move head!!
-  TreeNode *build_BST(ListNode *&head, int n) {
+  TreeNode* sortedListToBST(ListNode*& head, int n) {
     if (n == 0) {
       return NULL;
     }
-    TreeNode *cur = new TreeNode(0);
-    cur->left = build_BST(head, n/2);
-    cur->val = head->val;
+    TreeNode* left = sortedListToBST(head, n/2);
+    TreeNode* root = new TreeNode(head->val);
     head = head->next;
-    cur->right = build_BST(head, n - 1 - n/2);
-    return cur;
+    TreeNode* right = sortedListToBST(head, n-n/2-1);
+    root->left = left;
+    root->right = right;
+    return root;
+  }
+    
+public:
+  TreeNode* sortedListToBST(ListNode* head) {
+    int n = 0;
+    for (ListNode* p = head; p != NULL; p = p->next) ++n;
+    return sortedListToBST(head, n);
   }
 };

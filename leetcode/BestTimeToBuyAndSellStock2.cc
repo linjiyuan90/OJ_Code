@@ -1,39 +1,10 @@
-#include "iostream"
-#include "algorithm"
-#include "vector"
-
 class Solution {
 public:
-  int maxProfit(std::vector<int> &prices) {
-    if (prices.empty()) {
-      return 0;
-    }
-    // at i, sell the stock buy in j (j <= i)
-    // dp[i] = max{dp[j-1] + prices[i] - prices[j]}
-    //       = max{dp[j-1] - prices[j]} + prices[i]
-    // ans = dp[n-1]
-    // O(n)
-    // the dp array can be removed
-    std::vector<int> dp(prices.size(), 0);
-    int max_dp_price = -prices[0];
-    for (size_t ix = 1; ix < prices.size(); ++ix) {
-      // this is the situation "buy and sell at ix"
-      max_dp_price = max(max_dp_price, dp[ix-1] - prices[ix]);
-      dp[ix] = max_dp_price + prices[ix];
-    }
-    return dp.back();
-  }
-};
-
-// Most elegant method is to buy it if prices[i] > prices[i-1]
-class Solution {
-public:
-  int maxProfit(std::vector<int> &prices) {
+  int maxProfit(vector<int> &prices) {
+    // once there is an increament, get it
     int ans = 0;
-    for (int i = 0; i < prices.size(); ++i) {
-      if (prices[i] > prices[i-1]) {
-	ans += prices[i] - prices[i-1];
-      }
+    for (int i = 1, n = prices.size(); i < n; ++i) {
+      ans += std::max(prices[i] - prices[i-1], 0);
     }
     return ans;
   }

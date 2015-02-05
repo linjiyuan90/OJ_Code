@@ -1,34 +1,38 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
 class Solution {
-public:
-  ListNode *mergeKLists(std::vector<ListNode *> &lists) {
-    ListNode *dummy = new ListNode(0), *head = dummy;
-    // multimap seems faster?
-    // lambda cmp not work here --!
-    std::priority_queue<ListNode *, std::vector<ListNode *>, ListNodeCMP> pq;
-    for (auto list : lists) {
-      if (list == NULL) {
-	continue;
-      }
-      pq.push(list);
+  struct ListNodeCmp {
+    bool operator()(const ListNode* a, const ListNode* b) {
+      return a->val > b->val;
     }
+  };
+public:
+  ListNode* mergeKLists(vector<ListNode*>& lists) {
+    std::priority_queue<ListNode*, std::vector<ListNode*>, ListNodeCmp> pq;
+    for (auto& list : lists) {
+      if (list != NULL) {
+        pq.push(list);
+      }
+    }
+    ListNode* dummy = new ListNode(0);
+    ListNode* head = dummy;
     while (!pq.empty()) {
-      auto it = pq.top();
+      ListNode* top = pq.top();
       pq.pop();
-      head->next = it;
+      head->next = top;
       head = head->next;
-      if (head->next != NULL) {
-	pq.push(head->next);
+      if (top->next != NULL) {
+        pq.push(top->next);
       }
     }
     head = dummy->next;
     delete dummy;
     return head;
   }
-
-private:
-  struct ListNodeCMP {
-    bool operator()(const ListNode *a, const ListNode *b) {
-      return a->val > b->val;
-    }
-  };
 };

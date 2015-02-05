@@ -1,44 +1,33 @@
 class Solution {
-public:
-  std::vector<std::vector<int>> combinationSum2(std::vector<int> &candidates,
-						int target) {
-    std::sort(candidates.begin(), candidates.end());
-    std::vector<std::vector<int>> ans;
-    std::vector<int> cur;
-    dfs(0, candidates, target, ans, cur);
-    return ans;
-  }
-
-private:
-  void dfs(int ix,
-	   std::vector<int> &candidates,
-	   int target,
-	   std::vector<std::vector<int>> &ans,
-	   std::vector<int> &cur) {
-    if (target == 0) {
-      ans.push_back(cur);
+    
+  void combination(vector<int>& candidates, int i, vector<int>& cur, int left, vector<vector<int>>& ways) {
+    if (left == 0) {
+      if (!cur.empty()) {
+        ways.push_back(cur);
+      }
       return;
     }
-    if (ix == candidates.size()) {
+    if (i == candidates.size()) {
       return;
     }
-    int next = ix + 1;
-    while (next < candidates.size() && candidates[next] == candidates[ix]) {
-      ++ next;
+    int j = upper_bound(candidates.begin() + i, candidates.end(), candidates[i]) - candidates.begin();
+    int k = 0;
+    for (; left >= 0 && k <= j - i; ++k) {
+      combination(candidates, j, cur, left, ways);
+      cur.push_back(candidates[i]);
+      left -= candidates[i];
     }
-    // don't choose
-    dfs(next, candidates, target, ans, cur);
-    // choose one, two, ...
-    int c = 0;
-    for (; ix < next && target >= candidates[ix]; ++ix, ++c) {
-      cur.push_back(candidates[ix]);
-      target -= candidates[ix];
-      dfs(next, candidates, target, ans, cur);
-    }
-    while (c--) {
+    while (k--) {
       cur.pop_back();
     }
   }
+    
+public:
+  vector<vector<int> > combinationSum2(vector<int> &candidates, int target) {
+    sort(candidates.begin(), candidates.end());
+    vector<vector<int>> ways;
+    vector<int> cur;
+    combination(candidates, 0, cur, target, ways);
+    return ways;
+  }
 };
-
-// [1, 1], 1 return [{1}]

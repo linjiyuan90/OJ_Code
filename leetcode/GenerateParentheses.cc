@@ -1,18 +1,24 @@
 class Solution {
-public:
-  // just enumerate the head structure
-  std::vector<std::string> generateParenthesis(int n) {
-    if (n == 0) {
-      return std::vector<std::string>{""};
-    }
+  // enumerate the first pair of parenthese
+  std::vector<string> generateParenthesisImpl(int n) {
     std::vector<std::string> ans;
-    for (int i = 0; i <= n - 1; ++i) {
-      for (auto left : generateParenthesis(i)) {
-	for (auto right : generateParenthesis(n - 1 - i)) {
-	  ans.push_back("(" + left + ")" + right);
-	}
+    if (n == 0) {
+      ans.push_back("");
+    } else {
+      for (int inside = 0; inside < n; ++inside) {
+        auto left = generateParenthesisImpl(inside);
+        auto right = generateParenthesisImpl(n - inside - 1);
+        for (auto& l : left) {
+          for (auto& r : right) {
+            ans.push_back("(" + l + ")" + r);
+          }
+        }
       }
     }
     return ans;
+  }
+public:
+  vector<string> generateParenthesis(int n) {
+    return generateParenthesisImpl(n);
   }
 };

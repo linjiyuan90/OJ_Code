@@ -1,21 +1,30 @@
 class Solution {
+  const vector<int> dr = {0, 1, 0, -1};
+  const vector<int> dc = {1, 0, -1, 0};
+    
 public:
-  std::vector<std::vector<int>> generateMatrix(int n) {
-    auto ans = std::vector<std::vector<int>>(n, std::vector<int>(n, 0));
-    int dx[] = {0, 1, 0, -1};
-    int dy[] = {1, 0, -1, 0};
-    for (int i = 1, x = 0, y = 0, d = 0, n2 = n * n; i <= n2; ++ i) {
-      ans[x][y] = i;
-      if (!isOk(x + dx[d], y + dy[d], n) || ans[x+dx[d]][y+dy[d]] != 0) {
-	d = (d + 1) % 4;
+  vector<vector<int> > generateMatrix(int n) {
+    vector<vector<int>> matrix(n, vector<int>(n));
+    int maxR = n - 1, minR = 0;
+    int maxC = n - 1, minC = 0;
+    for (int x = 1, r = 0, c = 0, d = 0; x <= n * n; ++x) {
+      matrix[r][c] = x;
+      if (r + dr[d] > maxR) {
+        -- maxC;
+        d = (d + 1) % 4;
+      } else if (r + dr[d] < minR) {
+        ++ minC;
+        d = (d + 1) % 4;
+      } else if (c + dc[d] > maxC) {
+        ++ minR;
+        d = (d + 1) % 4;
+      } else if (c + dc[d] < minC) {
+        -- maxR;
+        d = (d + 1) % 4;
       }
-      x += dx[d];
-      y += dy[d];
+      r += dr[d];
+      c += dc[d];
     }
-    return ans;
-  }
-
-  bool isOk(int x, int y, int n) {
-    return 0 <= x && x < n && 0 <= y && y < n;
+    return matrix;
   }
 };

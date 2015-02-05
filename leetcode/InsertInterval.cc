@@ -1,23 +1,26 @@
-
 class Solution {
 public:
-  // push back the newInterval, sort and merge seems easier
-  std::vector<Interval> insert(std::vector<Interval> &intervals, Interval newInterval) {
-    intervals.push_back(newInterval);
-    std::sort(intervals.begin(), intervals.end(), 
-	      [](const Interval &a, const Interval &b) {
-		return a.start < b.start;
-	      });
+  vector<Interval> insert(vector<Interval> &intervals, Interval newInterval) {
     std::vector<Interval> ans;
-    for (auto &e : intervals) {
-      if (ans.empty() || ans.back().end < e.start) {
-	ans.push_back(e);
+    bool inserted = false;
+    for (Interval &interval : intervals) {
+      // non-overlap
+      if (interval.end < newInterval.start) {
+	ans.push_back(interval);
+      } else if (interval.start > newInterval.end) {
+	if (!inserted) {
+	  ans.push_back(newInterval);
+	  inserted = true;
+	}
+	ans.push_back(interval);
       } else {
-	ans.back().end = std::max(ans.back().end, e.end);
+	newInterval.start = std::min(newInterval.start, interval.start);
+	newInterval.end = std::max(newInterval.end, interval.end);
       }
+    }
+    if (!inserted) {
+      ans.push_back(newInterval);
     }
     return ans;
   }
 };
-
-// [[1, 5]], [0, 0]

@@ -1,53 +1,29 @@
-#include "iostream"
-#include "vector"
-#include "algorithm"
-
 class Solution {
-public:
-  // how large is target?
-  // Since combinations are required to output, brute-force is as fast as knapsack.
-  std::vector<std::vector<int>> combinationSum(std::vector<int> &candidates,
-						int target) {
-    std::sort(candidates.begin(), candidates.end());
-    candidates.erase(std::unique(candidates.begin(), candidates.end()), candidates.end());
-    std::vector<std::vector<int>> ans;
-    std::vector<int> cur;
-    dfs(0, candidates, target, ans, cur);
-    return ans;
-  }
-
-private:
-  void dfs(int ix,
-	   std::vector<int> &candidates,
-	   int target,
-	   std::vector<std::vector<int>> &ans,
-	   std::vector<int> &cur) {
-    if (target == 0) {
-      ans.push_back(cur);
+    
+  void combination(vector<int>& candidates, int i, vector<int>& cur, int left, vector<vector<int>>& ways) {
+    if (left == 0) {
+      if (!cur.empty()) {
+        ways.push_back(cur);
+      }
       return;
     }
-    if (ix == candidates.size()) {
+    if (i == candidates.size()) {
       return;
     }
-    // don't choose
-    dfs(ix + 1, candidates, target, ans, cur);
-    if (target >= candidates[ix]) {
-      // choose
-      cur.push_back(candidates[ix]);
-      dfs(ix, candidates, target - candidates[ix], ans, cur);
+    if (left >= candidates[i]) {
+      cur.push_back(candidates[i]);
+      combination(candidates, i, cur, left - candidates[i], ways);
       cur.pop_back();
     }
+    combination(candidates, i + 1, cur, left, ways);
+  }
+    
+public:
+  vector<vector<int> > combinationSum(vector<int> &candidates, int target) {
+    sort(candidates.begin(), candidates.end());
+    vector<vector<int>> ways;
+    vector<int> cur;
+    combination(candidates, 0, cur, target, ways);
+    return ways;
   }
 };
-
-int main() {
-  Solution sol;
-  auto vt = std::vector<int> {1, 1};
-  for (auto e : sol.combinationSum(vt, 1)) {
-    for (auto x : e) {
-      std::cout << x << " ";
-    }
-    std::cout << std::endl;
-  }
-  return 0;
-}

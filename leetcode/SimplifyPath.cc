@@ -1,49 +1,38 @@
 class Solution {
 public:
   string simplifyPath(string path) {
-    VS result = split(path, "/");
-    for (VS::iterator it = result.begin(); it != result.end(); ) {
-      if (*it == ".") {
-	it = result.erase(it);
-      } else if (*it == "..") {
-	it = result.erase(it);
-	if (it != result.begin()) {
-	  it = result.erase(it-1);
-	}
+    std::vector<std::string> parts;
+    for (std::size_t i = 0, n = path.size(); i <= n; ++i) {
+      if (i == n || path[i] == '/') {
+        if (!parts.empty()) {
+          if (parts.back() == ".") {
+            parts.pop_back();
+          } else if (parts.back() == "..") {
+            parts.pop_back();
+            if (!parts.empty()) {
+              parts.pop_back();
+            }
+          }
+        }
+        if (parts.empty() || !parts.back().empty()) {
+          parts.push_back("");
+        }
       } else {
-	it ++;
+        parts.back() += path[i];
       }
     }
-    return "/" + join("/", result);
-  }
-
-private:
-  typedef vector<string> VS;
-
-  // split s by specifying delimiters
-  // empty parts will be remove
-  VS split(const string &str, const string &delimiters) {
-    VS result;
-    for (size_t st = 0, ed = 0; ed != string::npos; ) {
-      ed = str.find_first_of(delimiters, st);
-      if (st < str.length() && st != ed) {
-	result.push_back(str.substr(st, ed - st));
-      }
-      st = ed + 1;
+    if (!parts.empty() && parts.back().empty()) {
+      parts.pop_back();
     }
-    return result;
-  }
-
-  // like python
-  // ' '.join(['a', 'b', 'c'])
-  string join(const string &c, const VS &strs) {
-    if (strs.empty()) {
-      return "";
+    if (parts.empty()) {
+      return "/";
     }
-    string result = strs[0];
-    for (size_t ix = 1; ix < strs.size(); ix++) {
-      result += c + strs[ix];
-    }
-    return result;
+    return std::accumulate(parts.begin(), parts.end(), 
+                           std::string(), 
+                           [](const std::string&a, const std::string& b) {
+                             return a + "/" + b;
+                           });
   }
 };
+
+// note "///", "/..", "/."

@@ -1,13 +1,13 @@
 class Solution {
 public:
   int numTrees(int n) {
-    std::vector<int> dp(n+1);
-    dp[0] = 1;
+    vector<int> ways(n+1);
+    ways[0] = 1;
     for (int i = 1; i <= n; ++i) {
-      for (int left = 0; left < i; ++left) {
-	dp[i] += dp[left] * dp[i - left - 1];
+      for (int r = 1; r <= i; ++r) {
+        ways[i] += ways[r-1] * ways[i-r];
       }
     }
-    return dp[n];
+    return ways[n];
   }
 };

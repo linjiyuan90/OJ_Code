@@ -1,44 +1,23 @@
-#include "iostream"
-#include "algorithm"
-#include "vector"
-#include "string"
-
 class Solution {
 public:
-  // TODO
-  // instead of filling the matrix
-  // output to string directly
-  std::string convert(std::string s, int nRows) {
-    std::vector<std::string> cols;
-    for (size_t ix = 0; ix < s.length();) {
-      // down
-      int len = std::min(nRows, (int)(s.length() - ix));
-      std::string col = s.substr(ix, len) + std::string(nRows - len, ' ');
-      cols.push_back(col);
-      ix += len;  // don't forget
-
-      // up (at most nRows-2 columns)
-      for (int c = 0; ix < s.length() && c < nRows - 2; ++c) {
-	std::string col = std::string(nRows, ' ');
-	col[nRows - 2 - c] = s[ix++];
-	cols.push_back(col);
-      }
+  // r, r-2, r, r-2, r, ... 
+  // |  /    |  /    |
+  string convert(string s, int nRows) {
+    if (nRows <= 1) {
+      return s;
     }
-    std::string res;
-    for (int r = 0, nCols = cols.size(); r < nRows; ++r) {
-      // how to use filter?
-      for (int c = 0; c < nCols; ++c) {
-	if (cols[c][r] != ' ') {
-	  res += cols[c][r];
+    std::string ans;
+    int n = s.size();
+    int r = nRows;
+    int m = 2*r - 2;
+    for (int i = 0; i < r; ++i) {
+      for (int j = i, k = (i/m + 1) * m - i; j < n; j += m, k += m) {
+	ans += s[j];
+	if (i != 0 && i != r - 1 && k < n) {
+	  ans += s[k];
 	}
       }
     }
-    return res;
+    return ans;
   }
 };
-
-
-int main() {
-  Solution sol;
-  std::cout << sol.convert("PAYPALISHIRING", 3) << std::endl;
-}

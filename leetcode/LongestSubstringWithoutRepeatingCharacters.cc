@@ -1,15 +1,15 @@
 class Solution {
 public:
-  int lengthOfLongestSubstring(std::string s) {
-    std::unordered_map<char, int> last;
-    int ans = 0; // note empty string
-    for (int i = 0, j = 0; j < s.length(); ++j) {
-      if (last.count(s[j])) {
-	// just jump :-)
-	i = std::max(i, last[s[j]] + 1);
+  int lengthOfLongestSubstring(string s) {
+    int ans = 0;
+    std::map<char, int> char_cnt;
+    for (size_t l = 0, r = 0, n = s.size(); l < n || r < n;) {
+      if (r < n && char_cnt[s[r]] == 0) { // NOT !char_cnt.count(s[r])
+	++ char_cnt[s[r++]];
+      } else {
+	-- char_cnt[s[l++]];
       }
-      last[s[j]] = j;
-      ans = std::max(ans, j - i + 1);
+      ans = std::max(ans, static_cast<int>(r - l));
     }
     return ans;
   }

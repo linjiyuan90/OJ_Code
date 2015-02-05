@@ -1,45 +1,42 @@
 class Solution {
+  std::vector<int> getNext(const std::string& str) {
+    if (str.empty()) {  // note
+      return std::vector<int>();
+    }
+    int n = str.size();
+    std::vector<int> next(n);
+    next[0] = -1;
+    for (int i = 1; i < n; ++i) {
+      for (next[i] = next[i-1] + 1; next[i] >= 0 && str[next[i]] != str[i]; ) {
+	next[i] = next[i] == 0 ? -1 : next[next[i]-1] + 1;
+      }
+    }
+    return next;
+  }
+    
 public:
   char *strStr(char *haystack, char *needle) {
     if (haystack == NULL || needle == NULL) {
-      return haystack;
+      return NULL;
     }
-    if (*needle == 0) { // ""
-      return haystack;
-    }
-    int n = strlen(haystack), m = strlen(needle);
-    auto next = calc_next(needle, m);
-    for (int i = 0, j = 0; i < n;) {
+    auto next = getNext(needle);
+    int n = ::strlen(haystack);
+    int m = ::strlen(needle);
+    int i, j;
+    for (i = 0, j = 0; i < n && j < m; ) {
       if (haystack[i] == needle[j]) {
-	++i;
-	++j;
-	if (j == m) {
-	  return haystack + (i - m);
-	}
+	++ i;
+	++ j;
       } else {
-	if (j == 0) {
+	for (; j >= 0 && haystack[i] != needle[j]; ) {
+	  j = j == 0 ? -1 : next[j-1] + 1;
+	}
+	if (j == -1) {
+	  j = 0;
 	  ++ i;
-	} else {
-	  j = next[j-1] + 1;
 	}
       }
     }
-    return NULL;
+    return j == m ? haystack + (i - m) : NULL;
   }
-
-private:
-  // keep s[i] = s[next[i]]
-  std::vector<int> calc_next(char *s, int n) {
-    auto next = std::vector<int>(n);
-    if (n > 0) {
-      next[0] = -1;
-      for (int i = 1, j; i < n; ++i) {
-	for (j = next[i-1] + 1; j >= 0 && s[j] != s[i];) {
-	  j = j == 0 ? -1 :  next[j-1] + 1;
-	}
-	next[i] = j;
-      }
-    }
-    return std::move(next);
-  }  
 };

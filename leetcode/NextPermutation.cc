@@ -1,24 +1,20 @@
 class Solution {
 public:
   void nextPermutation(vector<int> &num) {
-    if (num.empty()) {
+    int n = num.size();
+    // find the last a[i-1] < a[i] >= a[i+1] >= a[i+2] ...
+    int i;
+    for (i = n - 1; i > 0; --i) {
+      if (num[i-1] < num[i]) {
+	break;
+      }   
+    }
+    if (i == 0) {
+      std::reverse(num.begin(), num.end());
       return;
     }
-    size_t i, j, n = num.size();
-    for (i = n - 1; i > 0 && num[i-1] >= num[i]; i--) {
-      // from right to left
-      // find first i that has property:
-      // num[i, n) is nonincreasing
-      // num[i-1] < num[i]
-    }
-    if (i > 0) {
-      for (j = n - 1; j > i && num[i-1] >= num[j]; j--) {
-	// find num[j]
-	// where num[j] is the minimum number > num[i-1], j in [i, n)
-      }
-      // swap(num[i-1], num[j])
-      std::swap(num[i-1], num[j]);
-    }
-    std::reverse(num.begin()+i, num.end());
+    std::reverse(num.begin() + i, num.end());
+    int j = std::upper_bound(num.begin() + i, num.end(), num[i-1]) - num.begin();
+    std::swap(num[i-1], num[j]);
   }
 };

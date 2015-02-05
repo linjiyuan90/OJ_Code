@@ -1,29 +1,25 @@
 class Solution {
 public:
-  // O(n)
-  std::vector<int> twoSum(std::vector<int> &numbers, int target) {
-    int n = numbers.size();
-    std::vector<int> sorted_ix(n);
-    for (int i = 0; i < n; ++i) {
-      sorted_ix[i] = i;
+  vector<vector<int> > levelOrderBottom(TreeNode *root) {
+    std::vector<std::vector<int>> ans;
+    if (root == NULL) {
+      return ans;
     }
-    std::sort(sorted_ix.begin(), sorted_ix.end(),
-	      [&numbers](const int &a, const int &b) {
-		return numbers[a] < numbers[b];
-	      });
-    for (int i = 0, j = n - 1; i != j; ) {
-      int sum = numbers[sorted_ix[i]] + numbers[sorted_ix[j]];
-      if (sum == target) {
-	int a = sorted_ix[i] + 1, b = sorted_ix[j] + 1;
-	if (a > b) {
-	  std::swap(a, b);
+    for (std::vector<TreeNode *> last{root}; !last.empty(); ) {
+      ans.push_back(std::vector<int>());
+      std::vector<TreeNode *> next;
+      for (TreeNode *node : last) {
+	ans.back().push_back(node->val);
+	if (node->left != NULL) {
+	  next.push_back(node->left);
 	}
-	return std::vector<int> {a, b};
-      } else if (sum > target) {
-	-- j;
-      } else {
-	++ i;
+	if (node->right != NULL) {
+	  next.push_back(node->right);
+	}
       }
+      last = next;
     }
+    std::reverse(ans.begin(), ans.end());
+    return ans;
   }
 };

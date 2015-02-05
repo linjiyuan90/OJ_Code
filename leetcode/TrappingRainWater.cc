@@ -1,35 +1,25 @@
-#include "iostream"
-#include "algorithm"
-#include "stack"
-
 class Solution {
 public:
   int trap(int A[], int n) {
+    // using a stack to maintain a decreasing height
+    // also for each element in the stack, record area between it and 
+    // its previous heigher one
+    // note this problem is to sum all the area, note the max area
+    std::stack<std::pair<int, int>> desc;
     int ans = 0;
-    // maintain a monotonically decreasing stack
-    std::stack<int> desc_walls;
     for (int i = 0; i < n; ++i) {
-      while (desc_walls.size() > 1 && A[desc_walls.top()] <= A[i]) {
-	int h = A[desc_walls.top()];
-	desc_walls.pop();
-	ans += (std::min(A[i], A[desc_walls.top()]) - h) * (i - desc_walls.top() - 1);
-      }
-      if (!desc_walls.empty() && A[desc_walls.top()] <= A[i]) {
-	desc_walls.pop();
-      }
-      desc_walls.push(i);
+      std::pair<int, int> top = {i, 0};
+      while (!desc.empty() && A[desc.top().first] <= A[top.first]){
+        auto last = desc.top();
+        desc.pop();
+        if (!desc.empty()) {
+          top.second += 
+            (std::min(A[desc.top().first], A[top.first]) - A[last.first]) * (top.first - desc.top().first - 1);
+        }
+      } 
+      desc.push(top);
+      ans += top.second;
     }
     return ans;
   }
 };
-
-// [4, 2, 3] 1
-// [2, 0, 2] 2
-// [0,1,0,2,1,0,1,3,2,1,2,1] 6
-
-int main() {
-  int A[] = {0,1,0,2,1,0,1,3,2,1,2,1};
-  Solution sol;
-  std::cout << sol.trap(A, 12) << std::endl;
-  return 0;
-}

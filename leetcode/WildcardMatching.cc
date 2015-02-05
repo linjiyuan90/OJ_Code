@@ -1,76 +1,43 @@
-#include "iostream"
-#include "vector"
-#include "cstring"
-#include "string"
-
 class Solution {
 public:
-
-  typedef std::vector<std::string> VS;
-
-  // add '|' to the front and end of s and p to make later handle easier
-  // split p by '*' to get a list of segments which consist only alpha, '|', and '?'
-  // 
-  // The match phase is for each segments in p, find the first match in s
-  // (No need to backstrap)
-  bool isMatch(const char *s, const char *p) {
-    std::string ss = "|" + std::string(s) + "|";
-    std::string pp = "|" + std::string(p) + "|";
+  // O(nm) dp will be TLE
+  // No need to calculate fully.
     
-    VS segments = split(pp, '*');
-
-    size_t now = 0;
-    for (auto seg : segments) {
-      now = find(ss, seg, now); 
-      if (now == std::string::npos) {
-	return false;
-      }
-      now += seg.length();
+  // https://github.com/Dionysus1227/edocteel/blob/master/Wildcard%20Matching.cc
+  bool isMatch(const char *s, const char *p) {
+    if (s == NULL && p == NULL) {
+      return true;
     }
-    return true;
-  }
-  
-  VS split(const std::string &str, const char &sep) {
-    VS result;
-    for (auto c : str) {
-      if (c == sep) {
-	if (result.back() != "") {
-	  result.push_back("");
+    if (s == NULL || p == NULL) {
+      return false;
+    }
+    int n = ::strlen(s), m = ::strlen(p);
+    int pre = 0, star = -1;
+    int i = 0, j = 0;
+    while (i < n) {
+      if (j < m && p[j] == '*') {
+	pre = i;
+	star = j++;
+      } else if (j < m && (p[j] == '?' || s[i] == p[j])) {
+	++i;
+	++j;
+      } else {  // backtrack
+	if (star == -1) {
+	  return false;
 	}
-      } else {
-	if (result.empty()) {
-	  result.push_back(std::string(1, c));
-	} else {
-	  result.back() = result.back() + c;
-	}
+	i = ++pre;  // * match s[pre]
+	j = star + 1;
       }
     }
-    return result;
-  }
-
-  // match with wildcard '?'
-  // how to accelerate this?
-  size_t find(const std::string &str,
-	      const std::string &sub_str,
-	      size_t start) {
-    for (size_t ix = start; ix + sub_str.length() <= str.length(); ++ix) {
-      size_t i = 0;
-      while (i < sub_str.length() && 
-	     (str[ix + i] == sub_str[i] || sub_str[i] == '?')) {
-	++ i;
-      }
-      if (i == sub_str.length()) {
-	return ix;
-      }
+    while (j < m && p[j] == '*') {
+      ++ j;
     }
-    return std::string::npos;
+    return j == m;
   }
 };
 
-int main() {
-  Solution sl;
-  // char s[1000] = "mississippi", p[1000] = "m*iss*?";
-  char s[1000] = "aa", p[1000] = "a";
-  //cin >> s >> p;
-  std::cout << sl.isMatch(s, p) << std::endl;
-}
+// use pre when doing a strstr~
+
+// what about recursive solution?
+
+

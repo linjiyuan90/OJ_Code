@@ -1,31 +1,27 @@
 class Solution {
 public:
-  std::string multiply(std::string num1, std::string num2) {
-    std::reverse(num1.begin(), num1.end());
-    std::reverse(num2.begin(), num2.end());
-    
-    // using std::vector<int> is more convenient
-    std::vector<int> ans(num1.size() + num2.size());
-    for (int i = 0; i < num1.size(); ++i) {
-      int c = 0;
-      for (int j = 0; j < num2.size(); ++j) {
-	c += (num1[i] - '0') * (num2[j] - '0') + ans[i+j];
-	ans[i+j] = c % 10;
-	c /= 10;
-      }
-      for (int j = num2.size(); c > 0; ++j) {
-	c += ans[i+j];
-	ans[i+j] = c % 10;
-	c /= 10;
+  string multiply(string num1, string num2) {
+    int n = num1.size(), m = num2.size();
+    if (n == 0 || m == 0) {
+      throw std::invalid_argument("Multiply empty string");
+    }
+    std::vector<int> ans(n + m);
+    for (int i = 0; i < n; ++i) {
+      for (int j = 0; j < m; ++j) {
+	ans[i+j] += (num1[n-1-i] - '0') * (num2[m-1-j] - '0');
+	if (ans[i+j] >= 10) {
+	  ans[i+j+1] += ans[i+j] / 10;
+	}
+	ans[i+j] %= 10;
       }
     }
-    while (ans.size() > 1 && ans.back() == 0) {
+    while(ans.size() > 1 && ans.back() == 0) {
       ans.pop_back();
     }
-    std::string res;
+    std::string ans_str;
     for (auto it = ans.rbegin(); it != ans.rend(); ++it) {
-      res.push_back(*it + '0');
+      ans_str += std::to_string(*it);
     }
-    return res;
+    return ans_str;
   }
 };

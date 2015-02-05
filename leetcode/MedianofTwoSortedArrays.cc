@@ -1,95 +1,39 @@
-// recursively solution is more easier to write
 class Solution {
-public:
-  double findMedianSortedArrays(int A[], int m, int B[], int n) {
-    if ((m+n) % 2 == 0) {
-      return (findMedian(A, m, B, n, (m+n)/2) + findMedian(A, m, B, n, (m+n)/2+1)) / 2.0;
-    } else {
-      return findMedian(A, m, B, n, (m+n)/2+1); 
-    }
-  }
-  
-private:
-  int findMedian(int A[], int m, int B[], int n, int c) {
-    if (m == 0) {
-      return B[c-1];
+  double findMedianSortedArrays(int A[], int n, int B[], int m, int k) {
+    if (k <= 0 || k > n + m) {
+      throw std::invalid_argument("k should be: 1 <= k <= n + m");
     }
     if (n == 0) {
-      return A[c-1];
+      return B[k - 1];
     }
-    if (m + n == c) {
-      return std::max(A[m-1], B[n-1]);
+    if (m == 0) {
+      return A[k - 1];
     }
-    if (c == 1) {  // note when c == 1
+    if (k == 1) {
       return std::min(A[0], B[0]);
     }
-    int a = std::min(c/2, m);
-    int b = c - a;
-    if (b > n) {
-      b = n;
-      a = c - b;
+    if (k == n + m) {
+      return std::max(A[n-1], B[m-1]);
+    }
+    int a = std::min(k / 2, n);
+    int b = k - a;
+    if (b > m) {
+      b = m;
+      a = k - b;
     }
     if (A[a-1] < B[b-1]) {
-      return findMedian(A+a, m-a, B, n, c-a);
+      return findMedianSortedArrays(A + a, n - a, B, m, k - a);
     } else {
-      return findMedian(A, m, B+b, n-b, c-b);
+      return findMedianSortedArrays(A, n, B + b, m - b, k - b);
     }
   }
-};
-
-
-class Solution {
 public:
-
-  int mymin(int A[], int m, int B[], int n, int a, int b) {
-    if (a >= m || b < n && A[a] > B[b]) {
-      return B[b];
-    }
-    return A[a];
-  }
-  
-  double findMedianSortedArrays(int A[], int m, int B[], int n) {
-    // suppose C = merge(A, B)
-    // then (C[l]+C[r])/2 will be the answer
-    int l = (n+m-1)/2, r = (n+m)/2;
-    int ai = m-1, bi = n-1;
-    while (ai >= 0 && bi >= 0 && ai + bi + 1 > l) {
-      // still need to drop s highest number in merge(A[0..ai], B[0..bi]) 
-      int s = ai + bi + 1 - l;
-      int sa = min(ai+1, s/2), sb = s - sa;
-      if (sb > bi+1) {
-	sb = bi + 1;
-	sa = s - sb;
-      }
-      if (s == 1) {  // note this
-	sa = sb = 1;
-      }
-      // sa > 0, sb > 0
-      // after compare
-      // maybe drop last sa number in A[0..ai]
-      // maybe drop last sb number in B[0..bi]
-      // where sa + sb = s
-      if (A[ai-sa+1] > B[bi-sb+1]) {
-	ai -= sa;
-      } else {
-	bi -= sb;
-      }
-    }
-    double dl, dr;
-    if (ai == -1) {
-      dl = B[bi = l];
-    } else if (bi == -1) {
-      dl = A[ai = l];
+  double findMedianSortedArrays(int A[], int n, int B[], int m) {
+    if ((n + m) % 2 == 0) {
+      return (findMedianSortedArrays(A, n, B, m, (n+m)/2) + 
+	      findMedianSortedArrays(A, n, B, m, (n+m)/2+1)) / 2.0;
     } else {
-      // now we have that A[0..ai], B[0..bi] are the l+1 smallest numbers
-      dl = max(A[ai], B[bi]);
+      return findMedianSortedArrays(A, n, B, m, (n+m+1)/2);
     }
-    dr = l == r ? dl : mymin(A, m, B, n, ai+1, bi+1);
-    return (dl+dr)/2;
   }
-  // test case
-  // [1 1 3 3]
-  // [1 1 3 3]
-  // => 2
 };
-

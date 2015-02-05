@@ -1,20 +1,17 @@
-
 class Solution {
 public:
-  bool wordBreak(std::string s, std::unordered_set<std::string> &dict) {
-    std::vector<bool> dp(s.length() + 1, false);
-    dp[0] = true;
-    for(size_t ix = 0; ix < s.length(); ++ix) {
-      for (auto w : dict) {
-	if (w.length() <= ix + 1) {
-	  size_t beg  = ix + 1 - w.length();
-	  if (dp[beg] && s.substr(beg, w.length()) == w) {
-	    dp[ix + 1] = true;
-	    break;
-	  }
+  bool wordBreak(string s, unordered_set<string> &dict) {
+    int n = s.length();
+    std::vector<bool> is_feasible(n);
+    for (int i = 0; i < n; ++i) {
+      for (int j = i; j >= 0; --j) {
+	if ((j == 0 || is_feasible[j-1])
+	    && dict.count(s.substr(j, i - j + 1))) {
+	  is_feasible[i] = true;
+	  break;
 	}
       }
     }
-    return dp[s.length()];
+    return is_feasible[n-1];
   }
 };

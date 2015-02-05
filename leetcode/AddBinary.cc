@@ -1,21 +1,25 @@
 class Solution {
 public:
-  std::string addBinary(std::string a, std::string b) {
+  string addBinary(string a, string b) {
     std::reverse(a.begin(), a.end());
     std::reverse(b.begin(), b.end());
-    int n = std::max(a.length(), b.length());
-    a.resize(n, '0');
-    b.resize(n, '0');
+    std::string ans;
+    int n = a.size(), m = b.size();
     int c = 0;
-    for (size_t i = 0; i < n; ++i) {
-      c = c + (a[i] == '1') + (b[i] == '1');
-      a[i] = c % 2 + '0';
-      c = c / 2;
+    for (int i = 0; i < std::max(n, m); ++i) {
+      if (i < n) {
+	c += a[i] - '0';
+      }
+      if (i < m) {
+	c += b[i] - '0';
+      }
+      ans.push_back('0' + (c % 2));
+      c /= 2;
     }
-    if (c != 0) {
-      a.push_back('1');
+    if (c > 0) {
+      ans.push_back('1');
     }
-    std::reverse(a.begin(), a.end());
-    return a;
+    std::reverse(ans.begin(), ans.end());
+    return ans;
   }
 };

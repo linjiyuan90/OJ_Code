@@ -1,15 +1,13 @@
 class Solution {
+  std::vector<int> dp{1, 1, 2};
+    
 public:
   int climbStairs(int n) {
-    // dp[i] = dp[i-1] + dp[i-2];
-    // dp[1] = 1;
-    // dp[0] = 1;
-    int dp[3] = {1, 1, 0};
-    for (int i = 2; i <= n; ++i) {
-      dp[i%3] = dp[(i-1)%3] + dp[(i-2)%3];
+    if (dp.size() > n) {
+      return dp[n];
     }
-    return dp[n%3];
+    int ans = climbStairs(n-1) + climbStairs(n-2);
+    dp.push_back(ans);
+    return ans;
   }
 };
-
-// faster algorithm is to use matrix multiplication

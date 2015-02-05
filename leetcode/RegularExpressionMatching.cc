@@ -1,27 +1,35 @@
 class Solution {
 public:
+  // need to consider:
+  // "a", ""
+  // "a", "ab*"
   bool isMatch(const char *s, const char *p) {
-    if (*s == 0 && *p == 0) {
+    if (s == NULL && p == NULL) {
       return true;
     }
-    if (*s != 0 && *p == 0) {  // let *s == 0 be judged below
+    if (s == NULL || p == NULL) {
       return false;
     }
-    const char *q = p + 1;
-    while (*q == '*') {
-      ++q;
+    if (*p == 0) {
+      return *s == 0;
     }
-    if (q != p + 1) {  // '*'
-      if (isMatch(s, q)) {
-	return true;
-      }
-      while (*s != 0 && (*p == '.' || *s == *p)) {
-	if (isMatch(++s, q)) {
+    // compress '*'
+    const char* q = p + 1;
+    while (*q == '*') {
+      ++ q;
+    }
+    if (q != p + 1) { // has *
+      for (const char* t = s; true; ++t) {
+	if (isMatch(t, q)) {
 	  return true;
+	}
+	if (*t == 0 || *t != *p && *p != '.') {
+	  break;
 	}
       }
     } else {
-      return *s != 0 && (*p == '.' || *s == *p) && isMatch(s+1, q);
+      // *s may be 0
+      return (*s == *p || *s != 0 && *p == '.') && isMatch(s + 1, p + 1);
     }
     return false;
   }

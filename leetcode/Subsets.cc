@@ -1,24 +1,27 @@
 class Solution {
-public:
-  std::vector<std::vector<int>> subsets(std::vector<int> &S) {
-    std::sort(S.begin(), S.end());
-    std::vector<std::vector<int>> ans;
-    std::vector<int> cur;
-    dfs(S.begin(), S.end(), ans, cur);
-    return ans;
-  }
-private:
-  typedef std::vector<int>::iterator Iter;
+    
+  typedef std::vector<int> int_vector;
+  typedef std::vector<int_vector> int_vector2;
+  typedef int_vector::iterator Iter;
 
-  void dfs(Iter beg, Iter end, 
-	   std::vector<std::vector<int>> &ans, std::vector<int> &cur) {
+  void dfs(Iter beg, Iter end,
+	   int_vector2& subset,
+	   int_vector& cur) {
     if (beg == end) {
-      ans.push_back(cur);
+      subset.push_back(cur);
       return;
     }
-    dfs(beg + 1, end, ans, cur);
+    dfs(beg+1, end, subset, cur);
     cur.push_back(*beg);
-    dfs(beg + 1, end, ans, cur);
+    dfs(beg+1, end, subset, cur);
     cur.pop_back();
+  }
+public:
+  int_vector2 subsets(int_vector& S) {
+    std::sort(S.begin(), S.end());
+    int_vector2 subset;
+    int_vector cur;
+    dfs(S.begin(), S.end(), subset, cur);
+    return subset;
   }
 };

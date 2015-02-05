@@ -1,30 +1,30 @@
-#include "iostream"
-
-struct ListNode {
-  int val;
-  ListNode *next;
-  ListNode(int x): val(x), next(NULL) {}
-};
-
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
 class Solution {
 public:
   ListNode *partition(ListNode *head, int x) {
-    // Can't define like, for reason "taking adderss of temporary"
-    // ListNode *lt_node = &ListNode(0);
-    ListNode lt_node = ListNode(0), gt_node = ListNode(0);
-    ListNode *lt = &lt_node, *gt = &gt_node;
-    for (ListNode *p = head; p != NULL; p = p-> next) {
-      if (p->val >= x) {
-        gt -> next = p;
-        gt = p;
+    ListNode *lt = new ListNode(-1), *ge = new ListNode(-1);
+    ListNode *p = lt, *q = ge;
+    for (; head != NULL; head = head->next) {
+      if (head->val < x) {
+	p->next = head;
+	p = p->next;
       } else {
-	// last node with value < x
-	lt -> next = p;
-        lt = p;
+	q->next = head;
+	q = q->next;
       }
     }
-    gt -> next = NULL;
-    lt -> next = gt_node.next;
-    return lt_node.next;
+    p->next = ge->next;
+    q->next = NULL;
+    head = lt->next;
+    delete lt;
+    delete ge;
+    return head;
   }
 };

@@ -4,11 +4,16 @@ public:
     if (root == NULL) {
       return false;
     }
-    // Note it's root-to-leaf
+    // leaf
     if (root->left == NULL && root->right == NULL) {
-      return sum == root->val;
+      return root->val == sum;
     }
-    return hasPathSum(root->left, sum - root->val) || 
-      hasPathSum(root->right, sum - root->val);
+    if (root->left != NULL && hasPathSum(root->left, sum - root->val)) {
+      return true;
+    }
+    if (root->right != NULL && hasPathSum(root->right, sum - root->val)) {
+      return true;
+    }
+    return false;
   }
 };

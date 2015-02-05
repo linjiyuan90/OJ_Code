@@ -1,16 +1,18 @@
 class Solution {
 public:
-  bool isPalindrome(std::string s) {
-    std::string t;
-    for (auto c : s) {
-      if (::isalnum(c)) {
-	t += ::tolower(c);
+  bool isPalindrome(string s) {
+    for (int i = 0, j = s.length() - 1; i < j; ) {
+      if (!::isalnum(s[i])) {
+	++i;
+      } else if (!::isalnum(s[j])) {
+	--j;
+      } else if (::tolower(s[i]) != ::tolower(s[j])) {
+	return false;
+      } else {
+	++i;
+	--j;
       }
     }
-    std::string r = t;
-    std::reverse(r.begin(), r.end());
-    return t == r;
+    return true;
   }
 };
-// TODO
-// Without constructing new string

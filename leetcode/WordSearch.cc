@@ -1,84 +1,60 @@
-#include "iostream"
-#include "string"
-#include "vector"
-#include "map"
-
-using namespace std;
-
-class Solution{
-public:
-  // whuy just brute force search will work?
-  // what's complexity?
-  bool exist(vector<vector<char> > &board, string word) {
-    if (board.empty()) {
-      return word.empty();
-    }
-    int n = board.size(), m = board.front().size();
-    for (int i = 0; i < n; ++i) {
-      for (int j = 0; j < m; ++j) {
-	vector<int> path{i*m+j};
-	if (board[i][j] == word.front() &&
-	    dfs_exist(board, i, j, word.substr(1), path)) {
-	  return true;
-	}
-      }
-    }
-    return false;
+class Solution {
+    
+  std::vector<int> di = {0, 1, 0, -1};
+  std::vector<int> dj = {1, 0, -1, 0};
+    
+  bool isValid(int i, int j, int n, int m) {
+    return 0 <= i && i < n && 0 <= j && j < m;
   }
-
-private:
-  bool dfs_exist(vector<vector<char> > &board,
-		 int i,
-		 int j,
-		 string word,
-		 vector<int> &path) {
-    if (word.empty()) {
+    
+  bool exist(std::vector<std::vector<char>>& board, 
+	     std::vector<std::vector<bool>>& mark,
+	     std::string word,
+	     int i, 
+	     int j, 
+	     int cur) {
+    if (cur == word.size()) {
       return true;
     }
     int n = board.size(), m = board.front().size();
-    int di[] = {0, 0, -1, 1};
-    int dj[] = {-1, 1, 0, 0};
     for (int k = 0; k < 4; ++k) {
       int ii = i + di[k], jj = j + dj[k];
-      if (is_valid(n, m, ii, jj) &&
-	  board[ii][jj] == word.front() && 
-	  find(path.begin(), path.end(), ii * m + jj) == path.end()) {
-	path.push_back(ii * m + jj);
-	if (dfs_exist(board, ii, jj, word.substr(1), path)) {
+      if (!isValid(ii, jj, n, m) 
+	  || mark[ii][jj] 
+	  || board[ii][jj] != word[cur]) {
+	continue;
+      }
+      mark[ii][jj] = true;
+      if (exist(board, mark, word, ii, jj, cur + 1)) {
+	return true;
+      }
+      mark[ii][jj] = false;
+    }
+    return false;
+  }
+    
+public:
+  bool exist(vector<vector<char> > &board, string word) {
+    if (word.empty()) {
+      return true;
+    }
+    if (board.empty()) {
+      return false;
+    }
+    int n = board.size(), m = board.front().size();
+    std::vector<std::vector<bool>> mark(n, std::vector<bool>(m));
+    for (int i = 0; i < n; ++i) {
+      for (int j = 0; j < m; ++j) {
+	if (board[i][j] != word.front()) {
+	  continue;
+	}
+	mark[i][j] = true;
+	if (exist(board, mark, word, i, j, 1)) {
 	  return true;
 	}
-	path.erase(--path.end());
+	mark[i][j] = false;
       }
     }
     return false;
   }
-
-  bool is_valid(int n, int m, int i, int j) {
-    return i >= 0 && i < n && j >= 0 && j < m;
-  }
 };
-
-int main() {
-  Solution sol;
-
-  std::vector<std::vector<char> > board = {
-    {'A', 'B','C', 'E'}, 
-    {'S', 'F', 'C', 'S'}, 
-    {'A', 'D', 'E', 'E'}};
-  std::cout << (sol.exist(board, "ABCCED") ? "true" : "false") << std::endl;
-  std::cout << (sol.exist(board, "SEE") ? "true" : "false") << std::endl;
-  std::cout << (sol.exist(board, "ABCB") ? "true" : "false") << std::endl;
-
-  board = {
-    {'A', 'B', 'C', 'D', 'E'},
-    {'T', 'S', 'R', 'Q', 'F'},
-    {'M', 'N', 'O', 'P', 'G'}, 
-    {'L', 'K', 'J', 'I', 'H'}};
-  std::cout << (sol.exist(board, "ABCDEFGHIJKLMNOPQRST") ? "true" : "false") << std::endl;
-
-  board = {
-    {'a', 'a', 'a', 'a'},
-    {'a', 'a', 'a', 'a'},
-    {'a', 'a', 'a', 'a'}};
-  std::cout << (sol.exist(board, "aaaaaaaaaaa") ? "true" : "false") << std::endl;
-}

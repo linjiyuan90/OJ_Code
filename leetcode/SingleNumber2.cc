@@ -1,19 +1,19 @@
+/*
+  Find the only element which occures one times while others occcur three times.
+  Like xor, but count each bit's occurrence % 3
+*/
+
 class Solution {
 public:
-  // It seems that the single number appears once.
-  // Count every digit, module it with 3
   int singleNumber(int A[], int n) {
-    std::vector<int> count(32);
+    // count each bit's occurrence % 3
+    int one = 0, two = 0;
     for (int i = 0; i < n; ++i) {
-      for (int d = 0; d < 32; ++d) {
-	count[d] += (A[i] >> d) & 1;
-      }
+      int common = A[i] & two;
+      two -= common;
+      two += one & (A[i] - common);
+      one ^= A[i] - common;
     }
-    int ans = 0;
-    for (int d = 0; d < 32; ++d) {
-      // assert(count[d] % 3 == 0 || count[d] % 3 == 1);
-      ans |= (count[d] % 3) << d;
-    }
-    return ans;
+    return one;
   }
 };

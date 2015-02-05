@@ -1,14 +1,19 @@
 class Solution {
 public:
   void merge(int A[], int m, int B[], int n) {
-    for (int ai = m-1; ai >= 0; --ai) {
-      A[ai+n] = A[ai];
-    }
-    for (int i = n, j = 0, k = 0; i < n+m || j < n; ) {
-      if (i == n+m || j < n && A[i] > B[j]) {
-	A[k++] = B[j++];
+    // at first, shift right A
+    std::copy(A, A + m, A + n);
+    // then merge
+    int* a = A + n;
+    int* b = B;
+    int* aEnd = A + m + n;
+    int* bEnd = B + n;
+    int* c = A;
+    while (a < aEnd || b < bEnd) {
+      if (b == bEnd || a < aEnd && *a < *b) {
+        *c++ = *a++;
       } else {
-	A[k++] = A[i++];
+        *c++ = *b++;
       }
     }
   }

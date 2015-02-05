@@ -4,15 +4,17 @@ public:
     if (x == 0) {
       return 0;
     }
-    int lo = 1, hi = x;
-    while (lo <= hi) {
-      int mi = (lo + hi) / 2;
-      if (mi <= x/mi) {
-	lo = mi + 1;
+    int low = 1, high = x;
+    while(low < high) {
+      int mid = (low + high) / 2;
+      // mid+1, not mid
+      // for example, x = 2
+      if ((mid+1) <= x / (mid+1)) {
+	low = mid + 1;
       } else {
-	hi = mi-1;
+	high = mid;
       }
     }
-    return hi;
+    return low;
   }
 };

@@ -1,30 +1,28 @@
+/*
+  instead of find the pivot first, find the target directly by discussing whether
+  the mid is left part or right part.
+*/
+
 class Solution {
 public:
   int search(int A[], int n, int target) {
-    // first search the minimum element (the gap)
-    int gap = search_gap(A, n);
-    int *p = std::lower_bound(A, A + gap, target);
-    if (p != A + gap && *p == target) {
-      return p - A;
-    }
-    p = std::lower_bound(A + gap, A + n, target);
-    if (p != A + n && *p == target) {
-      return p - A;
-    }
-    return -1;
-  }
-
-private:
-  int search_gap(int A[], int n) {
-    int lo = 0, hi = n-1;
-    while (lo < hi) {
-      int m = (lo + hi) / 2;
-      if (A[m] > A[hi]) {
-	lo = m + 1;
+    int low = 0, high = n-1;
+    while(low < high) {
+      int mid = (low + high) / 2;
+      if (A[mid] > A[high]) {  // mid is in the left part
+	if (target > A[mid] || target < A[low]) {
+	  low = mid + 1;
+	} else {
+	  high = mid;
+	}
       } else {
-	hi = m;
+	if (target > A[high] || target <= A[mid]) {
+	  high = mid;
+	} else {
+	  low = mid + 1;
+	}
       }
     }
-    return lo;
+    return A[low] == target ? low : -1;
   }
 };
