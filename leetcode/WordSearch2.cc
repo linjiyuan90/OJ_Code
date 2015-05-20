@@ -3,6 +3,7 @@
 #include <string>
 #include <algorithm>
 #include <iterator>
+#include <set>
 
 using namespace std;
 
@@ -31,76 +32,49 @@ struct Pos {
 
 class Solution {
 
-  bool biJudge(int n, int m,
-               const vector<vector<char>>& board, 
-               const string& word, 
-               vector<vector<bool>>& mark,
-               Pos a, Pos b, int l, int r) {
-    if (l == -1 && r == word.size()) {
-      return true;
+  // whether there is an area which contains enough chars for word
+  bool isEnough(int n, int m, 
+                const vector<vector<char>>& board,
+                const string& word) {
+    map<char, int> charCnts;
+    for (char ch : word) {
+      ++charCnts[ch];
     }
-    if (l == -1) {
-      for (Pos nb : b.next(n, m)) {
-        if (board[nb.x][nb.y] == word[r]) {
-          mark[nb.x][nb.y] = true;
-          if (biJudge(n, m, board, word, mark, a, nb, l, r + 1)) {
-            return true;
-          }
-          mark[nb.x][nb.y] = false;
+    vector<vector<bool>> mark(n, vector<bool>(m));
+    for (int i = 0; i < n; ++i) {
+      for (int j = 0; j < m; ++j) {
+        if (charCnts.count(board[i][j]) > 0) {
+          mark[i][j] = true;
         }
       }
-      return false;
-    } else if (r == word.size()) {
-      for (Pos na : a.next(n, m)) {
-        if (board[na.x][na.y] == word[l]) {
-          mark[na.x][na.y] = true;
-          if (biJudge(n, m, board, word, mark, na, b, l-1, r)) {
-            return true;
-          }
-          mark[na.x][na.y] = false;
-        }
-      }
-      return false;
-    } else {
-      for(Pos na : a.next(n, m)) {
-        for (Pos nb: b.next(n, m)) {
-          if (na != nb && board[na.x][na.y] == word[l] && board[nb.x][nb.y] == word[r]) {
-            mark[na.x][na.y] = true;
-            mark[nb.x][nb.y] = true;
-            if (biJudge(n, m, board, word, mark, na, nb, l-1, r+1)) {
-              return true;
-            }
-            mark[na.x][na.y] = false;
-            mark[nb.x][nb.y] = false;
-          }
-        }
-      }
-      return false;
     }
-  }
-  
-  bool biJudge(int n, int m,
-               const vector<vector<char>>& board, 
-               const string& word, 
-               vector<vector<bool>>& mark) {
-    int l = word.size() / 2, r = l + 1;
-    for (int x = 0; x < n; ++x) {
-      for (int y = 0; y < m; ++y) {
-        if (board[x][y] == word[l]) {
-          if (word.size() == 1) {
-            return true;
-          }
-          Pos a(x, y);
-          for (Pos b: a.next(n, m)) {
-            if (board[b.x][b.y] == word[r]) {
-              mark[a.x][a.y] = true;
-              mark[b.x][b.y] = true;
-              if (biJudge(n, m, board, word, mark, a, b, l-1, r+1)) {
-                return true;
+    for (int i = 0; i < n; ++i) {
+      for (int j = 0; j < m; ++j) {
+        if (mark[i][j]) {
+          queue<Pos> que;
+          que.push(Pos(i, j));
+          mark[i][j] = false;
+          map<char, int> cnts;
+          while (!que.empty()) {
+            Pos now = que.front();
+            que.pop();
+            ++cnts[board[now.x][now.y]];
+            for (Pos next : now.next(n, m)) {
+              if (mark[next.x][next.y]) {
+                que.push(next);
+                mark[next.x][next.y] = false;
               }
-              mark[a.x][a.y] = false;
-              mark[b.x][b.y] = false;
             }
+          }
+          bool ok = true;
+          for (pair<char, int> w : charCnts) {
+            if (cnts[w.first] < w.second) {
+              ok = false;
+              break;
+            }
+          }
+          if (ok) {
+            return true;
           }
         }
       }
@@ -108,7 +82,28 @@ class Solution {
     return false;
   }
 
-  bool biJudge(const vector<vector<char>>& board, const string& word) {
+  bool judge(int n, int m, 
+             const vector<vector<char>>& board, 
+             const string& word,
+             vector<vector<bool>>& mark,
+             Pos now,
+             int l) {
+    if (l == word.size()) {
+      return true;
+    }
+    for (Pos next : now.next(n, m)) {
+      if (board[next.i][next.j] == word[l] && !mark[next.i][next.j]) {
+        mark[next.i][next.j] = true;
+        if (judge(n, m, board, word, mark, next, l+1)) {
+          return true;
+        }
+        mark[next.i][next.j] = false;
+      }
+    }
+    return false;
+  }
+
+  bool judge(const vector<vector<char>>& board, const string& word) {
     if (word.empty()) {
       return true;
     }
@@ -117,15 +112,29 @@ class Solution {
     }
     int n = board.size();
     int m = board.front().size();
+    if (!isEnough(n, m, board, word)) {
+      return false;
+    }
     vector<vector<bool>> mark(n, vector<bool>(m));
-    return biJudge(n, m, board, word, mark);
+    for (int i = 0; i < n; ++i) {
+      for (int j = 0; j < m; ++j) {
+        if (board[i][j] == word.front()) {
+          mark[i][j] = true;
+          if (judge(n, m, board, word, mark, Pos(i, j), 1) {
+            return true;
+          }
+          mark[i][j] = false;
+        }
+      }
+    }
+    return false;
   }
 
  public:
   vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
     vector<string> ans;
     for (const string& word : words) {
-      if (biJudge(board, word)) {
+      if (judge(board, word)) {
         ans.push_back(word);
       }
     }
